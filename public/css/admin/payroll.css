@@ -1,0 +1,75 @@
+/* Payroll Specific Styles */
+.payroll-period-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: #eff6ff;
+    color: #1d4ed8;
+    border: 1px solid #bfdbfe;
+    border-radius: 9999px;
+    padding: 3px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.payroll-summary-bar {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.summary-card {
+    flex: 1;
+    min-width: 140px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.75rem;
+    padding: 0.85rem 1rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+}
+
+.summary-card .sc-label {
+    font-size: 0.7rem;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-weight: 600;
+}
+
+.summary-card .sc-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-top: 0.15rem;
+}
+
+.sc-value.green { color: #059669; }
+.sc-value.red   { color: #dc2626; }
+.sc-value.blue  { color: #1d4ed8; }
+
+.empty-payroll {
+    text-align: center;
+    padding: 2.5rem;
+    color: #94a3b8;
+    font-size: 0.9rem;
+}
+
+/* Dark Mode Overrides */
+.dark-mode .summary-card {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .summary-card .sc-label {
+    color: #94a3b8;
+}
+
+.dark-mode .payroll-period-badge {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+    border-color: rgba(59, 130, 246, 0.2);
+}
+
+.dark-mode .sc-value.blue { color: #60a5fa; }
+.dark-mode .sc-value.green { color: #34d399; }
+.dark-mode .sc-value.red { color: #f87171; }

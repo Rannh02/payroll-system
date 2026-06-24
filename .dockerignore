@@ -1,0 +1,15 @@
+/node_modules
+/vendor
+.env
+.git
+.gitignore
+Dockerfile
+.dockerignore
+storage/*.key
+storage/logs/*.log
+/public/hot
+/public/storage
+/tests
+.phpunit.result.cache
+.editorconfig
+.styleci.yml

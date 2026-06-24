@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark-mode, .dark-mode *));
+
+:root {
+    --primary: #2dd4bf;
+    --primary-hover: #14b8a6;
+    /* Light Mode Defaults */
+    --bg-dark: #f8fafc;
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+}
+
+.dark-mode {
+    --bg-dark: #0f172a;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --border: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+.btn-secondary-blend {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    color: var(--text-main);
+    padding: 0 1.25rem;
+    border-radius: 9999px;
+    font-weight: 600;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-secondary-blend:hover {
+    background: rgba(248, 250, 252, 0.95);
+}
+
+.dark-mode .btn-secondary-blend {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(255, 255, 255, 0.14);
+    color: #f8fafc;
+}
+
+.dark-mode .btn-secondary-blend:hover {
+    background: rgba(255, 255, 255, 0.14);
+}
+
+.glass {
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    /* border: 1px solid rgba(255, 255, 255, 0.1); */
+}
+
+.sidebar-transition {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-link-active {
+    background: rgba(45, 212, 191, 0.1);
+    border-left: 4px solid #2dd4bf;
+    color: #2dd4bf;
+}

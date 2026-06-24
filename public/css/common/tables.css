@@ -1,0 +1,231 @@
+/* Shared Data Table Styles */
+.table-container, 
+.approval-table-container, 
+.employee-table-container, 
+.department-table-container,
+.position-table-container {
+    border: 1px solid #e2e8f0;
+    border-radius: 1rem;
+    background: white;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    margin-top: 1.5rem;
+}
+
+.common-table, 
+.approval-table, 
+.employee-table, 
+.department-table,
+.position-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.common-table thead tr, 
+.approval-table thead tr, 
+.employee-table thead tr, 
+.department-table thead tr,
+.position-table thead tr {
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.common-table th, 
+.approval-table th, 
+.employee-table th, 
+.department-table th,
+.position-table th {
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #64748b;
+}
+
+.common-table td, 
+.approval-table td, 
+.employee-table td, 
+.department-table td,
+.position-table td {
+    padding: 1rem 1.5rem;
+    vertical-align: middle;
+    font-size: 0.875rem;
+}
+
+.common-table tbody tr, 
+.approval-table tbody tr, 
+.employee-table tbody tr, 
+.department-table tbody tr,
+.position-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+    transition: all 0.2s;
+}
+
+.common-table tbody tr:nth-child(even), 
+.approval-table tbody tr:nth-child(even), 
+.employee-table tbody tr:nth-child(even), 
+.department-table tbody tr:nth-child(even),
+.position-table tbody tr:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.common-table tbody tr:hover, 
+.approval-table tbody tr:hover, 
+.employee-table tbody tr:hover, 
+.department-table tbody tr:hover,
+.position-table tbody tr:hover {
+    background-color: #f1f5f9;
+}
+
+/* Common Badge System */
+.badge, .leave-badge, .department-badge, .status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.badge-pending { background: #fef3c7; color: #92400e; }
+.badge-approved, .badge-success, .badge-active, .badge-regular { background: #d1fae5; color: #065f46; }
+.badge-rejected, .badge-danger, .badge-error, .badge-inactive { background: #fee2e2; color: #991b1b; }
+.badge-leave-type, .badge-code, .badge-info { background: #dbeafe; color: #1e40af; }
+.badge-warning, .badge-probationary { background: #fef08a; color: #92400e; }
+
+/* Dark Mode Overrides */
+.dark-mode .table-container, 
+.dark-mode .approval-table-container, 
+.dark-mode .employee-table-container, 
+.dark-mode .department-table-container,
+.dark-mode .position-table-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .common-table thead tr, 
+.dark-mode .approval-table thead tr, 
+.dark-mode .employee-table thead tr, 
+.dark-mode .department-table thead tr,
+.dark-mode .position-table thead tr {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+.dark-mode .common-table th, 
+.dark-mode .approval-table th, 
+.dark-mode .employee-table th, 
+.dark-mode .department-table th,
+.dark-mode .position-table th {
+    color: #94a3b8;
+}
+
+.dark-mode .common-table tbody tr, 
+.dark-mode .approval-table tbody tr, 
+.dark-mode .employee-table tbody tr, 
+.dark-mode .department-table tbody tr,
+.dark-mode .position-table tbody tr {
+    border-color: #334155;
+}
+
+.dark-mode .common-table tbody tr:nth-child(even), 
+.dark-mode .approval-table tbody tr:nth-child(even), 
+.dark-mode .employee-table tbody tr:nth-child(even), 
+.dark-mode .department-table tbody tr:nth-child(even),
+.dark-mode .position-table tbody tr:nth-child(even) {
+    background-color: #0f172a;
+}
+
+.dark-mode .common-table tbody tr:hover, 
+.dark-mode .approval-table tbody tr:hover, 
+.dark-mode .employee-table tbody tr:hover, 
+.dark-mode .department-table tbody tr:hover,
+.dark-mode .position-table tbody tr:hover {
+    background-color: #334155;
+}
+
+.dark-mode .common-table td, 
+.dark-mode .approval-table td, 
+.dark-mode .employee-table td, 
+.dark-mode .department-table td,
+.dark-mode .position-table td {
+    color: #e2e8f0;
+}
+
+/* Dark Mode Badge Overrides */
+.dark-mode .badge-pending { background: rgba(245, 158, 11, 0.1); color: #fbbf24; }
+.dark-mode .badge-approved, .dark-mode .badge-success, .dark-mode .badge-active { background: rgba(16, 185, 129, 0.1); color: #34d399; }
+.dark-mode .badge-rejected, .dark-mode .badge-danger, .dark-mode .badge-error { background: rgba(239, 68, 68, 0.1); color: #f87171; }
+.dark-mode .badge-leave-type, .dark-mode .badge-code { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+
+/* Pagination Styles */
+.pagination {
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    gap: 0.25rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.page-item .page-link, .page-item span.page-link {
+    position: relative;
+    display: block;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    line-height: 1.25;
+    color: #64748b;
+    background-color: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.375rem;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.page-item .page-link:hover {
+    z-index: 2;
+    color: #0f172a;
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+}
+
+.page-item.active .page-link, .page-item.active span.page-link {
+    z-index: 3;
+    color: #fff;
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+}
+
+.page-item.disabled .page-link, .page-item.disabled span.page-link {
+    color: #94a3b8;
+    pointer-events: none;
+    background-color: #f8fafc;
+    border-color: #e2e8f0;
+}
+
+/* Dark Mode Pagination */
+.dark-mode .page-item .page-link, .dark-mode .page-item span.page-link {
+    background-color: #1e293b;
+    border-color: #334155;
+    color: #94a3b8;
+}
+
+.dark-mode .page-item .page-link:hover {
+    background-color: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.dark-mode .page-item.active .page-link, .dark-mode .page-item.active span.page-link {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.dark-mode .page-item.disabled .page-link, .dark-mode .page-item.disabled span.page-link {
+    background-color: #0f172a;
+    border-color: #1e293b;
+    color: #475569;
+}

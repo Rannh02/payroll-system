@@ -1,0 +1,65 @@
+/* Government Contribution Pages Styles */
+.govt-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.govt-header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    background: white;
+    padding: 1.5rem 2rem;
+    border-radius: 1.25rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+.govt-header-container h2 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.25rem;
+}
+
+.govt-header-container p {
+    color: #64748b;
+    font-size: 0.9375rem;
+    font-weight: 500;
+}
+
+.badge-sss, .badge-govt, .badge-ph, .badge-pg, .badge-tax {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+
+
+/* Dark Mode Overrides */
+.dark-mode .govt-header-container {
+    background: #1e293b;
+    border-color: #334155;
+}
+
+.dark-mode .govt-header-container h2 {
+    color: #f8fafc;
+}
+
+.dark-mode .govt-header-container p {
+    color: #94a3b8;
+}
+
+.dark-mode .badge-sss, .dark-mode .badge-govt, .dark-mode .badge-ph, .dark-mode .badge-pg, .dark-mode .badge-tax {
+    background: rgba(59, 130, 246, 0.1);
+    color: #60a5fa;
+}
+
+
