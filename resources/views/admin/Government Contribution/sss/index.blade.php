@@ -85,7 +85,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ $sss->links('pagination::bootstrap-5') }}
+        {{ $sss->links('vendor.pagination.numbers') }}
     </div>
 </div>
 

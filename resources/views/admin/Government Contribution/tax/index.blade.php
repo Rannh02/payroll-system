@@ -82,7 +82,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ $taxes->links('pagination::bootstrap-5') }}
+        {{ $taxes->links('vendor.pagination.numbers') }}
     </div>
 </div>
 

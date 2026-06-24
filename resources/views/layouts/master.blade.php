@@ -167,6 +167,11 @@
                             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
                             <span class="sidebar-text">Dashboard</span>
                         </a>
+                        <a href="{{ route('analytics.index') }}"
+                            class="sidebar-link {{ request()->routeIs('analytics.index') ? 'sidebar-link-active' : '' }}">
+                            <i data-lucide="bar-chart-2" class="h-5 w-5"></i>
+                            <span class="sidebar-text">Analytics</span>
+                        </a>
                         <a href="{{ route('employees.create') }}"
                             class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
                             <i data-lucide="users" class="h-5 w-5"></i>

@@ -92,6 +92,7 @@ Route::middleware(['auth'])->group(function () {
 Route::middleware(['auth', 'admin'])->group(function () {
     // ADMIN ROUTES (Strictly for Admins only)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics.index');
 
     // Employees Management
     Route::get('/employees/create', [EmployeeController::class, 'create'])->name('employees.create');

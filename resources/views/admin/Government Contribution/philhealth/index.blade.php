@@ -79,7 +79,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ $philhealth->links('pagination::bootstrap-5') }}
+        {{ $philhealth->links('vendor.pagination.numbers') }}
     </div>
 </div>
 

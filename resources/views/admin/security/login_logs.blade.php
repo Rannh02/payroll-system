@@ -138,7 +138,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ $logs->links('pagination::bootstrap-5') }}
+        {{ $logs->links('vendor.pagination.numbers') }}
     </div>
 </div>
 

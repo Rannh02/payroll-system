@@ -70,26 +70,57 @@
             </div>
         </div>
 
-        <!-- Analytics Section -->
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 1.5rem; margin-bottom: 1.5rem;">
-            <div class="activity-container" style="margin-top: 0;">
-                <div class="activity-header">
-                    <h3 class="activity-title">Payroll Expense Overview</h3>
-                    <div class="stat-badge badge-teal">Monthly</div>
+
+        <div class="stats-grid" style="grid-template-columns: repeat(5, 1fr);">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-amber">
+                        <i data-lucide="shield-alert" class="h-6 w-6"></i>
+                    </div>
                 </div>
-                <div style="height: 300px; padding: 1rem;">
-                    <canvas id="payrollChart"></canvas>
-                </div>
+                <h3 class="stat-label">Security Alerts</h3>
+                <p class="stat-value">{{ $securityAlerts }}</p>
             </div>
 
-            <div class="activity-container" style="margin-top: 0;">
-                <div class="activity-header">
-                    <h3 class="activity-title">Leave Request Status</h3>
-                    <div class="stat-badge badge-indigo">Distribution</div>
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-teal">
+                        <i data-lucide="activity" class="h-6 w-6"></i>
+                    </div>
                 </div>
-                <div style="height: 300px; padding: 1rem; display: flex; justify-content: center;">
-                    <canvas id="leaveChart"></canvas>
+                <h3 class="stat-label">Active Sessions</h3>
+                <p class="stat-value">{{ $activeSessions }}</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-rose">
+                        <i data-lucide="user-x" class="h-6 w-6"></i>
+                    </div>
                 </div>
+                <h3 class="stat-label">Failed Logins</h3>
+                <p class="stat-value">{{ $failedLogins }}</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-indigo">
+                        <i data-lucide="key-round" class="h-6 w-6"></i>
+                    </div>
+                </div>
+                <h3 class="stat-label">Password Resets</h3>
+                <p class="stat-value">{{ $passwordResets }}</p>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon stat-icon-teal">
+                        <i data-lucide="shield-check" class="h-6 w-6"></i>
+                    </div>
+                    <span class="stat-badge badge-teal">Score</span>
+                </div>
+                <h3 class="stat-label">Security Score</h3>
+                <p class="stat-value">{{ $securityScore }}/100</p>
             </div>
         </div>
 
@@ -107,20 +138,24 @@
                     @foreach($recentActivities as $activity)
                         <div class="activity-item">
                             <div style="display: flex; align-items: center; gap: 1rem;">
-                                <img src="{{ $activity->employee->photo_url }}" alt="" class="employee-avatar" 
-                                     style="width: 45px; height: 45px; border-radius: 12px; object-fit: cover; border: 1px solid var(--glass-border);">
+                                <img src="{{ $activity->employee->photo_url }}" alt="" class="employee-avatar"
+                                    style="width: 45px; height: 45px; border-radius: 12px; object-fit: cover; border: 1px solid var(--glass-border);">
                                 <div>
                                     <p class="profile-name" style="margin: 0;">
                                         {{ $activity->employee->name ?? 'Unknown Employee' }}
                                     </p>
-                                    <p class="profile-role" style="text-transform: none; font-size: 0.85rem; margin: 0;">Requested {{ $activity->leave_type }}</p>
+                                    <p class="profile-role" style="text-transform: none; font-size: 0.85rem; margin: 0;">Requested
+                                        {{ $activity->leave_type }}
+                                    </p>
                                 </div>
                             </div>
                             <div style="text-align: right;">
-                                <span class="badge {{ $activity->status === 'Pending' ? 'badge-amber' : ($activity->status === 'Approved' ? 'badge-emerald' : 'badge-rose') }}">
+                                <span
+                                    class="badge {{ $activity->status === 'Pending' ? 'badge-amber' : ($activity->status === 'Approved' ? 'badge-emerald' : 'badge-rose') }}">
                                     {{ $activity->status }}
                                 </span>
-                                <p class="activity-time" style="font-size: 0.75rem; color: var(--slate-500); margin-top: 0.35rem; margin-bottom: 0;">
+                                <p class="activity-time"
+                                    style="font-size: 0.75rem; color: var(--slate-500); margin-top: 0.35rem; margin-bottom: 0;">
                                     {{ $activity->created_at->diffForHumans() }}
                                 </p>
                             </div>
@@ -141,71 +176,4 @@
     </div>
 @endsection
 
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Payroll Chart
-            const payrollCtx = document.getElementById('payrollChart').getContext('2d');
-            new Chart(payrollCtx, {
-                type: 'bar',
-                data: {
-                    labels: @json($payrollLabels),
-                    datasets: [{
-                        label: 'Expense (₱)',
-                        data: @json($payrollData),
-                        backgroundColor: '#3b82f6',
-                        borderRadius: 8,
-                        barThickness: 20
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { display: false }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: 'rgba(0,0,0,0.05)' }
-                        },
-                        x: {
-                            grid: { display: false }
-                        }
-                    }
-                }
-            });
-
-            // Leave Distribution Chart
-            const leaveCtx = document.getElementById('leaveChart').getContext('2d');
-            new Chart(leaveCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Approved', 'Pending', 'Rejected'],
-                    datasets: [{
-                        data: @json($leaveChartData),
-                        backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                        borderWidth: 0,
-                        hoverOffset: 4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                padding: 20,
-                                usePointStyle: true,
-                                font: { family: 'Inter', size: 12 }
-                            }
-                        }
-                    },
-                    cutout: '70%'
-                }
-            });
-        });
-    </script>
-@endsection
+@section('scripts')@endsection

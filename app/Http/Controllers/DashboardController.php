@@ -48,6 +48,17 @@ class DashboardController extends Controller
         $rejectedLeaves = Leave_Request::where('status', 'rejected')->count();
         $leaveChartData = [$approvedLeaves, $pendingLeaves, $rejectedLeaves];
 
+        // New Security KPIs
+        $securityAlerts = \App\Models\LoginLog::whereNotNull('locked_until')->whereDate('created_at', Carbon::today())->count();
+        $failedLogins = \App\Models\LoginLog::where('status', 'FAILED')->whereDate('created_at', Carbon::today())->count();
+        $activeSessions = \Illuminate\Support\Facades\DB::table('sessions')
+            ->whereNotNull('user_id')
+            ->where('last_activity', '>=', Carbon::now()->subMinutes(15)->getTimestamp())
+            ->distinct()
+            ->count('user_id');
+        $passwordResets = \Illuminate\Support\Facades\DB::table('password_reset_tokens')->count();
+        $securityScore = 94; // Example score based on rules
+
         return view('admin.dashboard.index', compact(
             'totalEmployees',
             'payrollsProcessed',
@@ -56,7 +67,12 @@ class DashboardController extends Controller
             'recentActivities',
             'payrollLabels',
             'payrollData',
-            'leaveChartData'
+            'leaveChartData',
+            'securityAlerts',
+            'activeSessions',
+            'failedLogins',
+            'passwordResets',
+            'securityScore'
         ));
     }
 
@@ -176,6 +192,94 @@ class DashboardController extends Controller
             'ytdPayroll',
             'payrolls',
             'todayAttendance'
+        ));
+    }
+
+    public function analytics()
+    {
+        // Payroll expense – last 6 months (same logic as dashboard)
+        $payrollLabels = [];
+        $payrollData   = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            $payrollLabels[] = $month->format('M');
+            $payrollData[]   = (float) Payroll::whereYear('payroll_date', $month->year)
+                ->whereMonth('payroll_date', $month->month)
+                ->sum('gross_pay');
+        }
+
+        // Leave status distribution
+        $leaveChartData = [
+            Leave_Request::where('status', 'approved')->count(),
+            Leave_Request::where('status', 'pending')->count(),
+            Leave_Request::where('status', 'rejected')->count(),
+        ];
+
+        // 1. Login Activity Data (Weekly & Monthly)
+        $loginWeeklyData = ['labels' => [], 'success' => [], 'failed' => []];
+        for ($i = 3; $i >= 0; $i--) {
+            $start = \Carbon\Carbon::now()->subWeeks($i)->startOfWeek();
+            $end = clone $start;
+            $end->endOfWeek();
+            $loginWeeklyData['labels'][] = 'Wk ' . $start->format('W');
+            $loginWeeklyData['success'][] = \App\Models\LoginLog::whereBetween('created_at', [$start, $end])->where('status', 'SUCCESS')->count();
+            $loginWeeklyData['failed'][] = \App\Models\LoginLog::whereBetween('created_at', [$start, $end])->where('status', 'FAILED')->count();
+        }
+
+        $loginMonthlyData = ['labels' => [], 'success' => [], 'failed' => []];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            $loginMonthlyData['labels'][] = $month->format('M');
+            $loginMonthlyData['success'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->where('status', 'SUCCESS')->count();
+            $loginMonthlyData['failed'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->where('status', 'FAILED')->count();
+        }
+
+        // 2. Security Threats (Brute Force = FAILED logins, Lockouts = locked_until not null)
+        $threat6m = ['labels' => [], 'brute' => [], 'locks' => []];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            $threat6m['labels'][] = $month->format('M');
+            $threat6m['brute'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->where('status', 'FAILED')->count();
+            $threat6m['locks'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->whereNotNull('locked_until')->count();
+        }
+
+        $threat3m = ['labels' => [], 'brute' => [], 'locks' => []];
+        for ($i = 2; $i >= 0; $i--) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            $threat3m['labels'][] = $month->format('M');
+            $threat3m['brute'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->where('status', 'FAILED')->count();
+            $threat3m['locks'][] = \App\Models\LoginLog::whereYear('created_at', $month->year)->whereMonth('created_at', $month->month)->whereNotNull('locked_until')->count();
+        }
+
+        // 3. User Role Distribution
+        $adminCount = \App\Models\User::where('role', 'admin')->count();
+        $employeeCount = \App\Models\User::where('role', 'employee')->count();
+        $roleChartData = [$adminCount, $employeeCount];
+
+        // 4. Browser Analytics
+        $browsers = \App\Models\LoginLog::select('browser', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+            ->groupBy('browser')
+            ->orderByDesc('total')
+            ->get();
+
+        $browserLabels = [];
+        $browserData = [];
+        foreach ($browsers as $browser) {
+            $label = $browser->browser ?: 'Unknown';
+            $browserLabels[] = $label;
+            $browserData[] = $browser->total;
+        }
+        
+        if (empty($browserLabels)) {
+            $browserLabels = ['No Data'];
+            $browserData = [1];
+        }
+
+        return view('admin.analytics.index', compact(
+            'payrollLabels', 'payrollData', 'leaveChartData',
+            'loginWeeklyData', 'loginMonthlyData',
+            'threat6m', 'threat3m',
+            'roleChartData', 'browserLabels', 'browserData'
         ));
     }
 }

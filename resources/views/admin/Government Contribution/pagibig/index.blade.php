@@ -85,7 +85,7 @@
     </div>
 
     <div style="margin-top: 20px;">
-        {{ $pagibig->links('pagination::bootstrap-5') }}
+        {{ $pagibig->links('vendor.pagination.numbers') }}
     </div>
 </div>
 
