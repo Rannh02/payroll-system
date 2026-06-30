@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Login | VIA Architects Associates Payroll System</title>
+    <meta name="description" content="Sign in to VIA Architects Associates Payroll System">
 
     <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,16 +55,16 @@
                 @endif
 
                 <div class="form-group">
-                    <label class="form-label" for="email">Email Address</label>
+                    <label class="form-label" for="email">Email / Username</label>
                     <div class="input-wrapper">
                         <svg class="input-icon" viewBox="0 0 24 24">
                             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z">
                             </path>
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
-                        <input type="email" id="email" name="email"
+                        <input type="text" id="email" name="email"
                             class="form-input @error('email') is-invalid @enderror"
-                            placeholder="email@via-architect.com" value="{{ old('email') }}" required autofocus>
+                            placeholder="email@via-architect.com or username" value="{{ old('email') }}" required autofocus>
                     </div>
                     @error('email')
                         <span class="error-message">{{ $message }}</span>

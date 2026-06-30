@@ -109,15 +109,18 @@
                 <div class="profile-container">
                     <button id="profile-btn" class="profile-trigger">
                         <div class="profile-avatar-gradient">
-                            <div class="profile-avatar-inner">
-                                <img src="{{ Auth::user()->profile_photo_url }}" alt="User"
-                                    style="width: 100%; height: 100%; object-fit: cover;">
+                            <div class="profile-avatar-inner" style="display:flex;align-items:center;justify-content:center;background:#6366f1;color:#fff;font-weight:bold;font-size:12px;">
+                                @if(session()->has('superadmin_id'))
+                                    SA
+                                @else
+                                    <img src="{{ Auth::user()->profile_photo_url }}" alt="User"
+                                        style="width: 100%; height: 100%; object-fit: cover;">
+                                @endif
                             </div>
                         </div>
                         <div class="profile-info">
-                            <p class="profile-name">{{ Auth::user()->name }}</p>
-                            <p class="profile-role">{{ Auth::user()->role === 'admin' ? 'Administrator' : 'Employee' }}
-                            </p>
+                            <p class="profile-name">{{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}</p>
+                            <p class="profile-role">{{ session()->has('superadmin_id') ? 'Super Administrator' : (Auth::user()->role === 'admin' ? 'Administrator' : 'Employee') }}</p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 transition-colors"></i>
                     </button>
@@ -126,13 +129,15 @@
                     <div id="profile-dropdown" class="dropdown-menu">
                         <div class="dropdown-header">
                             <p class="dropdown-label">Account</p>
-                            <p class="dropdown-user-name">{{ Auth::user()->name }}</p>
+                            <p class="dropdown-user-name">{{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}</p>
                         </div>
 
+                        @if(!session()->has('superadmin_id'))
                         <a href="{{ route('profile.settings') }}" class="dropdown-item">
                             <i data-lucide="user" class="h-4 w-4"></i>
                             Profile Settings
                         </a>
+                        @endif
 
                         <button id="theme-toggle" class="dropdown-item">
                             <i data-lucide="moon" class="h-4 w-4 theme-icon"></i>
@@ -141,7 +146,7 @@
 
                         <div class="dropdown-divider"></div>
 
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="POST" action="{{ session()->has('superadmin_id') ? route('superadmin.logout') : route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item dropdown-logout">
                                 <i data-lucide="log-out" class="h-4 w-4"></i>
@@ -155,168 +160,7 @@
 
         <div class="dashboard-wrapper">
             <!-- Sidebar Navigation -->
-            <aside id="sidebar" class="sidebar">
-                <nav class="sidebar-nav">
-                    <button id="sidebar-toggle" class="sidebar-toggle-btn">
-                        <i data-lucide="menu" class="h-6 w-6"></i>
-                    </button>
-
-                    @if(Auth::user()->role === 'admin')
-                        <a href="{{ route('dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Dashboard</span>
-                        </a>
-                        <a href="{{ route('analytics.index') }}"
-                            class="sidebar-link {{ request()->routeIs('analytics.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="bar-chart-2" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Analytics</span>
-                        </a>
-                        <a href="{{ route('employees.create') }}"
-                            class="sidebar-link {{ request()->routeIs('employees.create') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="users" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Add Employees</span>
-                        </a>
-
-                        <a href="{{ route('employees.index') }}"
-                            class="sidebar-link {{ request()->routeIs('employees.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="user-check" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Manage Employees</span>
-                        </a>
-
-                        <a href="{{ route('attendance.index') }}"
-                            class="sidebar-link {{ request()->routeIs('attendance.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="calendar" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Attendance</span>
-
-                        <a href="{{ route('department.index')}}"
-                            class="sidebar-link {{ request()->routeIs('department.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="briefcase" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Department</span>
-                        </a>
-
-                        <a href="{{ route('position.index')}}"
-                            class="sidebar-link {{ request()->routeIs('position.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="briefcase" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Position</span>
-                        </a>
-
-                        <a href="{{ route('payroll.index') }}"
-                            class="sidebar-link {{ request()->routeIs('payroll.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="banknote" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Payroll</span>
-                        </a>
-
-                        <a href="{{ route('approval_workflow.index')}}"
-                            class="sidebar-link {{ request()-> routeIs ('approval_workflow.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="calendar" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Approval Workflow</span>
-                        </a>
-
-                        {{-- Government Contributions Accordion --}}
-                        @php
-                            $govtRoutes = ['sss.index', 'philhealth.index', 'pagibig.index', 'tax.index'];
-                            $govtActive = request()->routeIs($govtRoutes);
-                        @endphp
-
-                        <div class="sidebar-group">
-                            <button id="govt-toggle"
-                                class="sidebar-link sidebar-group-btn w-full {{ $govtActive ? 'sidebar-link-active' : '' }}"
-                                onclick="toggleGovtMenu()"
-                                style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
-                                <i data-lucide="landmark" class="h-5 w-5"></i>
-                                <span class="sidebar-text">Government Contributions</span>
-                                <i data-lucide="chevron-down" class="h-4 w-4 sidebar-text govt-chevron" id="govt-chevron"
-                                    style="margin-left:auto; transition: transform 0.3s;"></i>
-                            </button>
-
-                            <div id="govt-submenu" class="sidebar-submenu" style="display:none; padding-left:1rem;">
-                                <a href="{{ route('sss.index') }}"
-                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('sss.index') ? 'sidebar-link-active' : '' }}">
-                                    <i data-lucide="shield" class="h-4 w-4"></i>
-                                    <span class="sidebar-text">SSS</span>
-                                </a>
-                                <a href="{{ route('philhealth.index') }}"
-                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('philhealth.index') ? 'sidebar-link-active' : '' }}">
-                                    <i data-lucide="heart-pulse" class="h-4 w-4"></i>
-                                    <span class="sidebar-text">PhilHealth</span>
-                                </a>
-                                <a href="{{ route('pagibig.index') }}"
-                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('pagibig.index') ? 'sidebar-link-active' : '' }}">
-                                    <i data-lucide="home" class="h-4 w-4"></i>
-                                    <span class="sidebar-text">Pag-IBIG</span>
-                                </a>
-                                <a href="{{ route('tax.index') }}"
-                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('tax.index') ? 'sidebar-link-active' : '' }}">
-                                    <i data-lucide="receipt" class="h-4 w-4"></i>
-                                    <span class="sidebar-text">Tax</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        {{-- Security Logs Accordion --}}
-                        @php
-                            $securityRoutes = ['security_logs.login'];
-                            $securityActive = request()->routeIs($securityRoutes);
-                        @endphp
-
-                        <div class="sidebar-group">
-                            <button id="security-toggle"
-                                class="sidebar-link sidebar-group-btn w-full {{ $securityActive ? 'sidebar-link-active' : '' }}"
-                                onclick="toggleSecurityMenu()"
-                                style="background:none; border:none; cursor:pointer; width:100%; text-align:left;">
-                                <i data-lucide="shield-alert" class="h-5 w-5"></i>
-                                <span class="sidebar-text">Security Logs</span>
-                                <i data-lucide="chevron-down" class="h-4 w-4 sidebar-text security-chevron" id="security-chevron"
-                                    style="margin-left:auto; transition: transform 0.3s;"></i>
-                            </button>
-
-                            <div id="security-submenu" class="sidebar-submenu" style="display:none; padding-left:1rem;">
-                                <a href="{{ route('security_logs.login') }}"
-                                    class="sidebar-link sidebar-sublink {{ request()->routeIs('security_logs.login') ? 'sidebar-link-active' : '' }}">
-                                    <i data-lucide="log-in" class="h-4 w-4"></i>
-                                    <span class="sidebar-text">Login Logs</span>
-                                </a>
-                            </div>
-                        </div>
-
-                        <a href="{{ route('reports.index') }}"
-                            class="sidebar-link {{ request()->routeIs('reports.index') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="file-bar-chart" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Reports</span>
-                        </a>
-                    @else
-                        <a href="{{ route('user.dashboard') }}"
-                            class="sidebar-link {{ request()->routeIs('user.dashboard') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Overview</span>
-                        </a>
-                        <a href="{{ route('user.attendance') }}"
-                            class="sidebar-link {{ request()->routeIs('user.attendance') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="calendar" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Attendance</span>
-                        </a>
-
-                        <a href="{{ route('user.payslip') }}"
-                            class="sidebar-link {{ request()->routeIs('user.payslip') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="file-text" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Payslip</span>
-                        </a>
-
-                        <a href="{{ route('user.leave_form') }}"
-                            class="sidebar-link {{ request()->routeIs('user.leave_form') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="file-edit" class="h-5 w-5"></i>
-                            <span class="sidebar-text">Apply for Leave</span>
-                        </a>
-
-                        <a href="{{ route('user.my_requests') }}"
-                            class="sidebar-link {{ request()->routeIs('user.my_requests') ? 'sidebar-link-active' : '' }}">
-                            <i data-lucide="git-pull-request" class="h-5 w-5"></i>
-                            <span class="sidebar-text">My Requests</span>
-                        </a>
-                    @endif
-                </nav>
-            </aside>
+            @include('partials.sidebar')
 
             <!-- Main Content Container -->
             <main class="main-content">

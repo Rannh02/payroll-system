@@ -42,5 +42,6 @@ class DatabaseSeeder extends Seeder
         \App\Models\Deduction::updateOrCreate(['deduction_id' => 4], ['deduction_name' => 'Tax']);
 
         $this->call(GovernmentContributionSeeder::class);
+        $this->call(SuperadminSeeder::class);
     }
 }

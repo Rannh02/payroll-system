@@ -11,9 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        $middleware->web(append: [
+            \App\Http\Middleware\SuperadminAuthSpoof::class,
+        ]);
         $middleware->alias([
-            'admin' => \App\Http\Middleware\AdminMiddleware::class,
-            'employee' => \App\Http\Middleware\EmployeeMiddleware::class,
+            'admin'           => \App\Http\Middleware\AdminMiddleware::class,
+            'employee'        => \App\Http\Middleware\EmployeeMiddleware::class,
+            'superadmin.auth' => \App\Http\Middleware\SuperadminAuthenticated::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

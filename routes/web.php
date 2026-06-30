@@ -14,12 +14,29 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ReportsController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SuperAdminController;
+
+
+
+// ── Superadmin routes ─────────────────────────────────────────────────────
+Route::prefix('superadmin')->name('superadmin.')->group(function () {
+    // Authenticated superadmin only
+    Route::middleware('superadmin.auth')->group(function () {
+        Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+    });
+
+    Route::post('/logout', [SuperAdminController::class, 'logout'])->name('logout');
+});
+
+
+
+
 
 Route::get('/', function () {
     return redirect()->route('login');
 });
 
-use App\Http\Controllers\AuthController;
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
@@ -88,6 +105,9 @@ Route::middleware(['auth'])->group(function () {
         return view('user.settings.index');
     })->name('profile.settings');
 });
+
+
+
 
 Route::middleware(['auth', 'admin'])->group(function () {
     // ADMIN ROUTES (Strictly for Admins only)

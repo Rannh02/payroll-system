@@ -24,7 +24,7 @@ class AuthController extends Controller
         Log::info('Login attempt for: ' . $request->email);
 
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'email' => ['required'],
             'password' => ['required'],
         ]);
 
@@ -69,6 +69,19 @@ class AuthController extends Controller
             return back()->withErrors([
                 'email' => 'Your account has been suspended. Please contact the administrator.',
             ])->onlyInput('email');
+        }
+
+        // Check if it's a superadmin
+        $superadmin = \App\Models\Superadmin::where('username', $request->email)->first();
+        if ($superadmin && Hash::check($request->password, $superadmin->password)) {
+            RateLimiter::clear($throttleKey);
+            Log::info('Superadmin login successful for: ' . $request->email);
+            
+            $request->session()->put('superadmin_id', $superadmin->superadmin_id);
+            $request->session()->put('superadmin_username', $superadmin->username);
+            $request->session()->regenerate();
+
+            return redirect()->route('superadmin.dashboard');
         }
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
