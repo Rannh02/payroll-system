@@ -61,6 +61,7 @@
                     <th>#</th>
                     <th>Date & Time</th>
                     <th>User</th>
+                    <th>Role</th>
                     <th>IP Address</th>
                     <th>Browser</th>
                     <th>Status</th>
@@ -80,6 +81,23 @@
                             @else
                                 <strong>Unknown</strong><br>
                                 <span class="text-muted">{{ $log->email }}</span>
+                            @endif
+                        </td>
+                        <td>
+                            @if($log->user)
+                                @php
+                                    $role = $log->user->role;
+                                    $roleLabel = match(strtolower($role)) {
+                                        'superadmin'  => ['label' => 'Super Admin',  'class' => 'badge-purple'],
+                                        'admin'       => ['label' => 'Admin',        'class' => 'badge-info'],
+                                        'hr'          => ['label' => 'HR',           'class' => 'badge-teal'],
+                                        'employee'    => ['label' => 'Employee',     'class' => 'badge-secondary'],
+                                        default       => ['label' => ucfirst($role), 'class' => 'badge-secondary'],
+                                    };
+                                @endphp
+                                <span class="badge {{ $roleLabel['class'] }}">{{ $roleLabel['label'] }}</span>
+                            @else
+                                <span class="text-muted">-</span>
                             @endif
                         </td>
                         <td>{{ $log->ip_address }}</td>
@@ -106,7 +124,7 @@
                         </td>
                         <td style="display: flex; gap: 5px; align-items: center;">
                             <button type="button" class="department-action-link btn-view-log"
-                                onclick="openLogModal({{ json_encode($log) }}, {{ json_encode($log->user ? $log->user->name : 'Unknown') }})">
+                                onclick="openLogModal({{ json_encode($log) }}, {{ json_encode($log->user ? $log->user->name : 'Unknown') }}, {{ json_encode($log->user ? $log->user->role : null) }})">
                                 View
                             </button>
 
@@ -130,7 +148,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="empty-state">No login logs found.</td>
+                        <td colspan="9" class="empty-state">No login logs found.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -162,6 +180,9 @@
                 <strong>User:</strong>
                 <div id="modalUser"></div>
                 
+                <strong>Role:</strong>
+                <div id="modalRole"></div>
+
                 <strong>Email:</strong>
                 <div id="modalEmail"></div>
                 

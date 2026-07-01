@@ -1,4 +1,4 @@
-function openLogModal(log, userName) {
+function openLogModal(log, userName, userRole) {
     document.getElementById('logModal').classList.add('show');
 
     // Format Date
@@ -6,6 +6,20 @@ function openLogModal(log, userName) {
     document.getElementById('modalDate').textContent = dateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
 
     document.getElementById('modalUser').textContent = userName;
+
+    // Role Badge
+    const roleMap = {
+        superadmin: { label: 'Super Admin', cls: 'badge-purple' },
+        admin:      { label: 'Admin',       cls: 'badge-info'   },
+        hr:         { label: 'HR',          cls: 'badge-teal'   },
+        employee:   { label: 'Employee',    cls: 'badge-secondary' },
+    };
+    const roleKey = userRole ? userRole.toLowerCase() : null;
+    const roleInfo = roleKey && roleMap[roleKey] ? roleMap[roleKey] : (userRole ? { label: userRole.charAt(0).toUpperCase() + userRole.slice(1), cls: 'badge-secondary' } : null);
+    document.getElementById('modalRole').innerHTML = roleInfo
+        ? `<span class="badge ${roleInfo.cls}">${roleInfo.label}</span>`
+        : '<span class="text-muted">-</span>';
+
     document.getElementById('modalEmail').textContent = log.email;
     document.getElementById('modalIp').textContent = log.ip_address;
     document.getElementById('modalBrowser').textContent = log.browser || 'Unknown';

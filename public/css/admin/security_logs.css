@@ -79,6 +79,14 @@
 
 /* Removed Badges (now using common dashboard badges) */
 
+/* Role-specific badge variants */
+.badge-purple    { background: #ede9fe; color: #5b21b6; }
+.badge-secondary { background: #f1f5f9; color: #475569; }
+
+.dark-mode .badge-purple    { background: rgba(139, 92, 246, 0.15); color: #a78bfa; }
+.dark-mode .badge-secondary { background: rgba(100, 116, 139, 0.15); color: #94a3b8; }
+.dark-mode .badge-teal      { background: rgba(20, 184, 166, 0.15);  color: #2dd4bf; }
+
 .locked-time-text {
     color: #dc2626;
     font-weight: 500;
