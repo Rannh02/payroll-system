@@ -24,11 +24,20 @@
             <span class="sidebar-text">Security Logs</span>
         </a>
 
+        <a href="{{ route('superadmin.AuditLogs') }}"
+            class="sidebar-link {{ request()->routeIs('superadmin.Audit-Logs') ? 'sidebar-link-active' : '' }}">
+            <i data-lucide="user-cog" class="h-5 w-5"></i>
+            <span class="sidebar-text">Audit Logs</span>
+        </a>
+
         <a href="{{ route('superadmin.Administrator') }}"
             class="sidebar-link {{ request()->routeIs('superadmin.Administrator') ? 'sidebar-link-active' : '' }}">
             <i data-lucide="user-cog" class="h-5 w-5"></i>
             <span class="sidebar-text">Administrator</span>
         </a>
+        
+        
+        
 
         {{-- Additional nav items can be included here easily in their own folders/files --}}
     </div>

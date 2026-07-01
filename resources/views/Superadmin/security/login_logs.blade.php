@@ -13,7 +13,7 @@
 <div class="govt-container">
     <div class="content-header">
         <div>
-            <h2 class="header-title">Login Logs</h2>
+            <h2 class="header-title">Security Logs</h2>
             <p class="header-subtitle">Monitor user login attempts across the system</p>
         </div>
     </div>

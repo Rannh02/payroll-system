@@ -21,6 +21,10 @@ class SuperAdminController extends Controller
         return view('Superadmin.Admin.Administrator');
     }
 
+    public function AuditLogs()
+    {
+        return view('Superadmin.Audit-Logs.AuditLogs');
+    }
     public function logout(Request $request)
     {
         $request->session()->forget(['superadmin_id', 'superadmin_username']);

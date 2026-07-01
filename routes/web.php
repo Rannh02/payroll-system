@@ -27,6 +27,13 @@ Route::prefix('superadmin')->name('superadmin.')->group(function () {
         Route::get('/analytics', [SuperAdminController::class, 'analytics'])->name('analytics');
         Route::get('/security-logs', [SuperAdminController::class, 'securityLogs'])->name('security_logs');
         Route::get('/Administrator', [SuperAdminController::class, 'Administrator'])->name('Administrator');
+        Route::get('/AuditLogs', [SuperAdminController::class, 'AuditLogs'])->name('AuditLogs');
+
+
+
+
+
+        //post 
         Route::post('/security-logs/toggle-suspend', [SuperAdminController::class, 'toggleSuspend'])->name('security_logs.suspend');
     });
 

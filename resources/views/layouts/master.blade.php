@@ -107,7 +107,7 @@
                             @endphp
                             <a href="{{ $viewAllRoute }}" class="view-all-link">View All Requests</a>
                         </div>
-                    </div>
+                    </div>  
                 </div>
 
                 <!-- Profile Section -->

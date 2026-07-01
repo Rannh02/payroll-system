@@ -62,6 +62,14 @@
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 transition-colors"></i>
                     </button>
 
+                    
+                    <button id="notification-btn" class="icon-btn">
+                        <i data-lucide="bell" class="h-5 w-5"></i>
+                        
+                            <span class="notification-dot"></span>
+                        
+                    </button>
+
                     <!-- Dropdown Menu -->
                     <div id="profile-dropdown" class="dropdown-menu">
                         <div class="dropdown-header">
