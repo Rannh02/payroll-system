@@ -9,7 +9,9 @@
     <!-- Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet">
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('css/common/dashboard.css') }}">
@@ -53,7 +55,9 @@
                         </div>
                         <div class="profile-info">
                             <p class="profile-name">{{ session('superadmin_username') }}</p>
-                            <p class="profile-role" style="color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 9px;">SYSTEM ROOT</p>
+                            <p class="profile-role"
+                                style="color: var(--accent); font-weight: 700; font-family: 'JetBrains Mono'; font-size: 9px;">
+                                SYSTEM ROOT</p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 transition-colors"></i>
                     </button>
@@ -67,7 +71,13 @@
 
                         <div class="dropdown-divider"></div>
 
-                        @include('Superadmin.layouts.navitems.logout.index')
+                        <form method="POST" action="{{ route('superadmin.logout') }}">
+                            @csrf
+                            <button type="submit" class="dropdown-item dropdown-logout">
+                                <i data-lucide="log-out" class="h-4 w-4"></i>
+                                Log Out
+                            </button>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -75,19 +85,7 @@
 
         <div class="dashboard-wrapper">
             <!-- Sidebar Navigation -->
-            <aside id="sidebar" class="sidebar sidebar-expanded">
-                <div class="sidebar-nav">
-                    <!-- Sidebar Toggle Button -->
-                    <button id="sidebar-toggle" class="sidebar-toggle-btn">
-                        <i data-lucide="menu" class="h-5 w-5"></i>
-                    </button>
-
-                    <!-- Separated Nav Items -->
-                    @include('Superadmin.layouts.navitems.dashboard.index')
-
-                    {{-- Additional nav items can be included here easily in their own folders/files --}}
-                </div>
-            </aside>
+            @include('Superadmin.layouts.navitems.sidebar')
 
             <!-- Main Content Container -->
             <main class="main-content" style="padding: 2rem;">
@@ -95,6 +93,31 @@
             </main>
         </div>
     </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     <!-- Scripts -->
     <script>

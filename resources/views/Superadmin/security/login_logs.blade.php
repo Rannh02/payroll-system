@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('Superadmin.layouts.master')
 
 @section('title', 'Login Logs')
 
@@ -26,7 +26,7 @@
 
     <!-- Filter Bar -->
     <div class="filter-bar-container">
-        <form action="{{ route('security_logs.login') }}" method="GET" class="filter-bar-form">
+        <form action="{{ route('superadmin.security_logs') }}" method="GET" class="filter-bar-form">
             
             <div class="filter-search-wrapper">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search email, IP, or reason..." class="filter-input">
@@ -49,7 +49,7 @@
 
             <div class="filter-btn-group">
                 <button type="submit" class="btn-filter-submit">Filter Logs</button>
-                <a href="{{ route('security_logs.login') }}" class="btn-filter-refresh">Refresh Filters</a>
+                <a href="{{ route('superadmin.security_logs') }}" class="btn-filter-refresh">Refresh Filters</a>
             </div>
         </form>
     </div>
@@ -109,6 +109,23 @@
                                 onclick="openLogModal({{ json_encode($log) }}, {{ json_encode($log->user ? $log->user->name : 'Unknown') }})">
                                 View
                             </button>
+
+                            @if($log->user && $log->user->role !== 'admin')
+                                <form action="{{ route('superadmin.security_logs.suspend') }}" method="POST" style="margin: 0;">
+                                    @csrf
+                                    <input type="hidden" name="user_id" value="{{ $log->user->id }}">
+                                    @if($log->user->is_suspended)
+                                        <button type="submit" class="department-action-link btn-unsuspend">
+                                            Unsuspend
+                                        </button>
+                                    @else
+                                        <button type="submit" class="department-action-link delete-link"
+                                                onclick="return confirm('Are you sure you want to suspend this user? They will not be able to log in.')">
+                                            Suspend
+                                        </button>
+                                    @endif
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @empty
@@ -178,57 +195,5 @@
     </div>
 </div>
 
-<script>
-    function openLogModal(log, userName) {
-        document.getElementById('logModal').classList.add('show');
-        
-        // Format Date
-        const dateObj = new Date(log.created_at);
-        document.getElementById('modalDate').textContent = dateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-        
-        document.getElementById('modalUser').textContent = userName;
-        document.getElementById('modalEmail').textContent = log.email;
-        document.getElementById('modalIp').textContent = log.ip_address;
-        document.getElementById('modalBrowser').textContent = log.browser || 'Unknown';
-        document.getElementById('modalUserAgent').textContent = log.user_agent;
-        
-        // Status Badge
-        let statusHtml = '';
-        if(log.status === 'SUCCESS') statusHtml = '<span class="badge badge-success">Success</span>';
-        else if(log.status === 'FAILED') statusHtml = '<span class="badge badge-danger">Failed</span>';
-        else if(log.status === 'LOCKED') statusHtml = '<span class="badge badge-warning">Locked</span>';
-        else if(log.status === 'UNLOCKED') statusHtml = '<span class="badge badge-info">Unlocked</span>';
-        else if(log.status === 'SUSPENDED') statusHtml = '<span class="badge badge-danger">Suspended</span>';
-        document.getElementById('modalStatus').innerHTML = statusHtml;
-        
-        // Locked Until
-        if(log.locked_until) {
-            const lockedDate = new Date(log.locked_until);
-            document.getElementById('modalLockedUntil').innerHTML = '<span class="locked-time-text">' + lockedDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) + '</span>';
-        } else {
-            document.getElementById('modalLockedUntil').innerHTML = '<span class="text-muted">N/A</span>';
-        }
-        
-        // Unlock Form
-        const unlockForm = document.getElementById('unlockForm');
-        if (log.status === 'LOCKED') {
-            document.getElementById('unlockLogId').value = log.id;
-            unlockForm.style.display = 'block';
-        } else {
-            unlockForm.style.display = 'none';
-        }
-    }
-
-    function closeLogModal() {
-        document.getElementById('logModal').classList.remove('show');
-    }
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(e) {
-        const modal = document.getElementById('logModal');
-        if (e.target === modal) {
-            closeLogModal();
-        }
-    });
-</script>
+<script src="{{ asset('js/superadmin/security_logs.js') }}"></script>
 @endsection

@@ -24,6 +24,10 @@ Route::prefix('superadmin')->name('superadmin.')->group(function () {
     // Authenticated superadmin only
     Route::middleware('superadmin.auth')->group(function () {
         Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/analytics', [SuperAdminController::class, 'analytics'])->name('analytics');
+        Route::get('/security-logs', [SuperAdminController::class, 'securityLogs'])->name('security_logs');
+        Route::get('/Administrator', [SuperAdminController::class, 'Administrator'])->name('Administrator');
+        Route::post('/security-logs/toggle-suspend', [SuperAdminController::class, 'toggleSuspend'])->name('security_logs.suspend');
     });
 
     Route::post('/logout', [SuperAdminController::class, 'logout'])->name('logout');
@@ -80,16 +84,16 @@ Route::post('/register', function (Illuminate\Http\Request $request) {
 Route::middleware(['auth', 'employee'])->group(function () {
     // EMPLOYEE ROUTES (Strictly for Employees only)
     Route::get('/user-dashboard', [DashboardController::class, 'userIndex'])->name('user.dashboard');
-    
+
     Route::get('/my-attendance', [AttendanceController::class, 'myAttendance'])->name('user.attendance');
     Route::get('/my-attendance/report', [AttendanceController::class, 'report'])->name('user.attendance.report');
-    
+
     Route::get('/payslip', [PayrollController::class, 'myPayslip'])->name('user.payslip');
 
     Route::get('/leave_form', [LeaveController::class, 'showForm'])->name('user.leave_form');
     Route::post('/leave_form', [LeaveController::class, 'store'])->name('user.leave_form.store');
     Route::get('/my-requests', [LeaveRequestController::class, 'myRequests'])->name('user.my_requests');
-    
+
     Route::post('/my-attendance/clock-in', [AttendanceController::class, 'userClockIn'])->name('user.clock_in');
     Route::post('/my-attendance/clock-out', [AttendanceController::class, 'userClockOut'])->name('user.clock_out');
     Route::get('/my-attendance/day-status', [AttendanceController::class, 'getDayStatus'])->name('user.day_status');

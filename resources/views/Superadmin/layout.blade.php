@@ -1,1 +1,0 @@
-{{-- Deprecated: This layout has been refactored and moved to Superadmin/layouts/master.blade.php --}}

@@ -265,19 +265,16 @@
             labels: ['Approved', 'Pending', 'Rejected'],
             datasets: [{
                 data: @json($leaveChartData),
-                backgroundColor: ['#10b981', '#f59e0b', '#ef4444'],
-                borderWidth: 0,
-                hoverOffset: 6,
+                backgroundColor: ['#10b981', '#f59e0b', '#ef4444']
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '70%',
             plugins: {
                 legend: {
                     position: 'bottom',
-                    labels: { padding: 20, usePointStyle: true, font: { family: 'Inter', size: 12 } }
+                    labels: { padding: 20, font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 } }
                 }
             }
         }

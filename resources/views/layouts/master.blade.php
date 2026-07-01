@@ -60,9 +60,10 @@
                                     <span class="badge-teal" id="notif-badge">{{ $pendingLeaveCount }} New</span>
                                 @endif
                             </div>
-                            <button onclick="clearAllNotifications(event)" class="text-xs font-bold hover:underline btn-clear-all">Clear All</button>
+                            <button onclick="clearAllNotifications(event)"
+                                class="text-xs font-bold hover:underline btn-clear-all">Clear All</button>
                         </div>
-                        
+
                         <div class="notification-list" id="notification-list">
                             @forelse($recentPendingLeaves as $leave)
                                 @php
@@ -73,16 +74,19 @@
                                     $iconColor = $leave->status === 'approved' ? '#10b981' : ($leave->status === 'rejected' ? '#ef4444' : 'var(--primary)');
                                 @endphp
                                 <a href="{{ $targetRoute }}" class="notification-item">
-                                    <div class="notification-icon-box" style="background-color: {{ $iconColor }}15; color: {{ $iconColor }};">
+                                    <div class="notification-icon-box"
+                                        style="background-color: {{ $iconColor }}15; color: {{ $iconColor }};">
                                         <i data-lucide="{{ $icon }}" class="h-4 w-4"></i>
                                     </div>
                                     <div class="notification-content">
                                         <p class="notification-title">{{ $title }}</p>
                                         <p class="notification-desc">
                                             @if($isAdmin)
-                                                <strong>{{ $leave->employee->name }}</strong> requested for {{ $leave->leave_type }}.
+                                                <strong>{{ $leave->employee->name }}</strong> requested for
+                                                {{ $leave->leave_type }}.
                                             @else
-                                                Your <strong>{{ $leave->leave_type }}</strong> request has been {{ $leave->status }}.
+                                                Your <strong>{{ $leave->leave_type }}</strong> request has been
+                                                {{ $leave->status }}.
                                             @endif
                                         </p>
                                         <span class="notification-time">{{ $leave->created_at->diffForHumans() }}</span>
@@ -96,7 +100,8 @@
                             @endforelse
                         </div>
 
-                        <div id="notif-footer" class="notification-footer {{ $pendingLeaveCount > 0 || count($recentPendingLeaves) > 0 ? '' : 'hidden' }}">
+                        <div id="notif-footer"
+                            class="notification-footer {{ $pendingLeaveCount > 0 || count($recentPendingLeaves) > 0 ? '' : 'hidden' }}">
                             @php
                                 $viewAllRoute = Auth::user()->role === 'admin' ? route('approval_workflow.index') : route('user.my_requests');
                             @endphp
@@ -109,7 +114,8 @@
                 <div class="profile-container">
                     <button id="profile-btn" class="profile-trigger">
                         <div class="profile-avatar-gradient">
-                            <div class="profile-avatar-inner" style="display:flex;align-items:center;justify-content:center;background:#6366f1;color:#fff;font-weight:bold;font-size:12px;">
+                            <div class="profile-avatar-inner"
+                                style="display:flex;align-items:center;justify-content:center;background:#6366f1;color:#fff;font-weight:bold;font-size:12px;">
                                 @if(session()->has('superadmin_id'))
                                     SA
                                 @else
@@ -119,8 +125,12 @@
                             </div>
                         </div>
                         <div class="profile-info">
-                            <p class="profile-name">{{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}</p>
-                            <p class="profile-role">{{ session()->has('superadmin_id') ? 'Super Administrator' : (Auth::user()->role === 'admin' ? 'Administrator' : 'Employee') }}</p>
+                            <p class="profile-name">
+                                {{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}
+                            </p>
+                            <p class="profile-role">
+                                {{ session()->has('superadmin_id') ? 'Super Administrator' : (Auth::user()->role === 'admin' ? 'Administrator' : 'Employee') }}
+                            </p>
                         </div>
                         <i data-lucide="chevron-down" class="h-4 w-4 text-slate-500 transition-colors"></i>
                     </button>
@@ -129,14 +139,16 @@
                     <div id="profile-dropdown" class="dropdown-menu">
                         <div class="dropdown-header">
                             <p class="dropdown-label">Account</p>
-                            <p class="dropdown-user-name">{{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}</p>
+                            <p class="dropdown-user-name">
+                                {{ session()->has('superadmin_id') ? session('superadmin_username') : Auth::user()->name }}
+                            </p>
                         </div>
 
                         @if(!session()->has('superadmin_id'))
-                        <a href="{{ route('profile.settings') }}" class="dropdown-item">
-                            <i data-lucide="user" class="h-4 w-4"></i>
-                            Profile Settings
-                        </a>
+                            <a href="{{ route('profile.settings') }}" class="dropdown-item">
+                                <i data-lucide="user" class="h-4 w-4"></i>
+                                Profile Settings
+                            </a>
                         @endif
 
                         <button id="theme-toggle" class="dropdown-item">
@@ -146,7 +158,8 @@
 
                         <div class="dropdown-divider"></div>
 
-                        <form method="POST" action="{{ session()->has('superadmin_id') ? route('superadmin.logout') : route('logout') }}">
+                        <form method="POST"
+                            action="{{ session()->has('superadmin_id') ? route('superadmin.logout') : route('logout') }}">
                             @csrf
                             <button type="submit" class="dropdown-item dropdown-logout">
                                 <i data-lucide="log-out" class="h-4 w-4"></i>
@@ -196,7 +209,7 @@
                     e.stopPropagation();
                     if (profileDropdown) profileDropdown.classList.remove('show');
                     notificationDropdown.classList.toggle('show');
-                    
+
                     // Mark as viewed when opening the dropdown
                     if (notificationDropdown.classList.contains('show')) {
                         markNotificationsAsViewed();
@@ -207,7 +220,7 @@
             window.markNotificationsAsViewed = () => {
                 const dot = document.querySelector('.notification-dot');
                 const badge = document.getElementById('notif-badge');
-                
+
                 if (dot || badge) {
                     fetch('{{ route("notifications.viewed") }}', {
                         method: 'POST',
@@ -240,7 +253,7 @@
                         const footer = document.getElementById('notif-footer');
                         const dot = document.querySelector('.notification-dot');
                         const badge = document.getElementById('notif-badge');
-                        
+
                         list.innerHTML = `
                             <div class="empty-notifications" id="empty-notif-msg">
                                 <i data-lucide="bell-off" class="h-8 w-8 mb-2"></i>
@@ -320,9 +333,9 @@
     <script>
         // Government Contributions accordion
         function toggleGovtMenu() {
-            const submenu  = document.getElementById('govt-submenu');
-            const chevron  = document.getElementById('govt-chevron');
-            const isOpen   = submenu.style.display !== 'none';
+            const submenu = document.getElementById('govt-submenu');
+            const chevron = document.getElementById('govt-chevron');
+            const isOpen = submenu.style.display !== 'none';
 
             submenu.style.display = isOpen ? 'none' : 'block';
             chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
@@ -337,7 +350,7 @@
 
             // Auto-open if currently on a govt route
             const govtActive = {{ isset($govtActive) && $govtActive ? 'true' : 'false' }};
-            const savedOpen  = localStorage.getItem('govtMenuOpen') === 'true';
+            const savedOpen = localStorage.getItem('govtMenuOpen') === 'true';
 
             if (govtActive || savedOpen) {
                 submenu.style.display = 'block';
@@ -349,7 +362,7 @@
             const secChevron = document.getElementById('security-chevron');
             if (secSubmenu && secChevron) {
                 const securityActive = {{ isset($securityActive) && $securityActive ? 'true' : 'false' }};
-                const secSavedOpen  = localStorage.getItem('securityMenuOpen') === 'true';
+                const secSavedOpen = localStorage.getItem('securityMenuOpen') === 'true';
 
                 if (securityActive || secSavedOpen) {
                     secSubmenu.style.display = 'block';
@@ -359,9 +372,9 @@
         });
 
         function toggleSecurityMenu() {
-            const submenu  = document.getElementById('security-submenu');
-            const chevron  = document.getElementById('security-chevron');
-            const isOpen   = submenu.style.display !== 'none';
+            const submenu = document.getElementById('security-submenu');
+            const chevron = document.getElementById('security-chevron');
+            const isOpen = submenu.style.display !== 'none';
 
             submenu.style.display = isOpen ? 'none' : 'block';
             chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';

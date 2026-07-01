@@ -50,7 +50,7 @@ class AuthController extends Controller
             ]);
 
             return back()->withErrors([
-                'email' => "Too many login attempts. Please try again in " . ceil($seconds / 60) . " minutes.",
+                'email' => "Too many login attempts. Your account is on hold.",
             ])->onlyInput('email');
         }
 

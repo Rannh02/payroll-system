@@ -39,7 +39,8 @@
             </div>
 
             @if (session('success'))
-                <div class="alert alert-success" style="margin: 0 0 1rem; padding: 1rem; border-radius: 0.5rem; background: #e6ffed; color: #034d17; border: 1px solid #90ee90;">
+                <div class="alert alert-success"
+                    style="margin: 0 0 1rem; padding: 1rem; border-radius: 0.5rem; background: #e6ffed; color: #034d17; border: 1px solid #90ee90;">
                     {{ session('success') }}
                 </div>
             @endif
@@ -48,8 +49,12 @@
                 @csrf
 
                 @if (session('status'))
-                    <div style="background:#d1fae5; color:#065f46; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.875rem; display:flex; align-items:center; gap:0.5rem;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    <div
+                        style="background:#d1fae5; color:#065f46; border-radius:0.5rem; padding:0.75rem 1rem; margin-bottom:1rem; font-size:0.875rem; display:flex; align-items:center; gap:0.5rem;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                            <polyline points="22 4 12 14.01 9 11.01" />
+                        </svg>
                         {{ session('status') }}
                     </div>
                 @endif
@@ -63,8 +68,8 @@
                             <polyline points="22,6 12,13 2,6"></polyline>
                         </svg>
                         <input type="text" id="email" name="email"
-                            class="form-input @error('email') is-invalid @enderror"
-                            placeholder="email@via-architect.com or username" value="{{ old('email') }}" required autofocus>
+                            class="form-input @error('email') is-invalid @enderror" placeholder="email or username"
+                            value="{{ old('email') }}" required autofocus>
                     </div>
                     @error('email')
                         <span class="error-message">{{ $message }}</span>
