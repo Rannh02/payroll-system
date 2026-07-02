@@ -11,6 +11,11 @@
             <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
             <span class="sidebar-text">Dashboard</span>
         </a>
+        <a href="{{ route('superadmin.Administrator') }}"
+            class="sidebar-link {{ request()->routeIs('superadmin.Administrator') ? 'sidebar-link-active' : '' }}">
+            <i data-lucide="user-cog" class="h-5 w-5"></i>
+            <span class="sidebar-text">Administrator</span>
+        </a>
 
         <a href="{{ route('superadmin.analytics') }}"
             class="sidebar-link {{ request()->routeIs('superadmin.analytics') ? 'sidebar-link-active' : '' }}">
@@ -18,8 +23,8 @@
             <span class="sidebar-text">Analytics</span>
         </a>
 
-        <a href="{{ route('superadmin.security_logs') }}"
-            class="sidebar-link {{ request()->routeIs('superadmin.security_logs') ? 'sidebar-link-active' : '' }}">
+        <a href="{{ route('superadmin.security') }}"
+            class="sidebar-link {{ request()->routeIs('superadmin.security') ? 'sidebar-link-active' : '' }}">
             <i data-lucide="shield-alert" class="h-5 w-5"></i>
             <span class="sidebar-text">Security Logs</span>
         </a>
@@ -30,11 +35,7 @@
             <span class="sidebar-text">Audit Logs</span>
         </a>
 
-        <a href="{{ route('superadmin.Administrator') }}"
-            class="sidebar-link {{ request()->routeIs('superadmin.Administrator') ? 'sidebar-link-active' : '' }}">
-            <i data-lucide="user-cog" class="h-5 w-5"></i>
-            <span class="sidebar-text">Administrator</span>
-        </a>
+        
         
         
         

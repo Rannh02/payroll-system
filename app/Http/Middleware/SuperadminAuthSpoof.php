@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use App\Models\Admin;
 
 class SuperadminAuthSpoof
 {
@@ -18,13 +18,11 @@ class SuperadminAuthSpoof
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->session()->has('superadmin_id') && !Auth::check()) {
-            // Find the first registered admin user in the system
-            $adminUser = User::where('role', 'admin')->first();
-            
+        if ($request->session()->has('superadmin_id') && !Auth::guard('admin')->check()) {
+            $adminUser = Admin::latest()->first();
+
             if ($adminUser) {
-                // Spoof the Auth guard session for this request with the real Admin user
-                Auth::setUser($adminUser);
+                Auth::guard('admin')->setUser($adminUser);
             }
         }
 

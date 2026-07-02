@@ -22,8 +22,8 @@ return new class extends Migration
             
             $table->foreign('position_id')->references('position_id')->on('position')->onDelete('set null');
             $table->foreign('department_id')->references('department_id')->on('department')->onDelete('set null');
-            $table->foreign('created_by')->references('id')->on('users')->onDelete('set null');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('created_by')->references('id')->on('admin')->onDelete('set null');
+            $table->foreign('user_id')->references('id')->on('employee_auth')->onDelete('set null');
 
             // Personal Information
             $table->string('first_name');

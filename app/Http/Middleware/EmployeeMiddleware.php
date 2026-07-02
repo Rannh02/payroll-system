@@ -16,7 +16,11 @@ class EmployeeMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'admin') {
+        if (Auth::guard('employee')->check()) {
+            return $next($request);
+        }
+
+        if (Auth::guard('web')->check() && Auth::guard('web')->user()->role === 'admin') {
             return redirect()->route('dashboard');
         }
 

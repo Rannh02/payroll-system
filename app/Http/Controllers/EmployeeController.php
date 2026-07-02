@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Employee;
 use App\Models\Department;
+use App\Models\EmployeeAuth;
 use App\Models\Position;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
@@ -36,7 +36,7 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:employee_auth,email',
             'password' => 'required|min:8|confirmed',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'nullable|string|max:50',
@@ -152,19 +152,19 @@ class EmployeeController extends Controller
                     $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
                 }
 
-                // Create the User account for login
-                $user = User::create([
-                    'name' => trim($request->first_name . ' ' . $request->last_name),
+                // Create the employee authentication record for login
+                $employeeAuth = EmployeeAuth::create([
+                    'first_name' => $request->first_name,
+                    'last_name' => $request->last_name,
                     'email' => $request->email,
-                    'password' => Hash::make($request->password),
-                    'role' => 'user',
-                    'profile_photo_path' => $photoPath,
+                    'password' => $request->password,
+                    'role' => 'employee',
                 ]);
 
                 // Create the Employee record
                 Employee::create([
                     'employee_number' => $request->employee_id, // This comes from the readonly input
-                    'user_id' => $user->id,
+                    'user_id' => $employeeAuth->id,
                     'created_by' => auth()->id(),
                     'first_name' => $request->first_name,
                     'middle_name' => $request->middle_name,
@@ -202,7 +202,7 @@ class EmployeeController extends Controller
                     'profile_photo' => $photoPath,
                 ]);
 
-                \Log::info('Employee created successfully for user: ' . $user->email);
+                \Log::info('Employee created successfully for email: ' . $employeeAuth->email);
             });
         } catch (\Exception $e) {
             \Log::error('Failed to create employee: ' . $e->getMessage());
@@ -217,7 +217,7 @@ class EmployeeController extends Controller
     public function update(Request $request, Employee $employee)
     {
         $request->validate([
-            'email' => 'required|email|unique:users,email,' . $employee->user_id,
+            'email' => 'required|email|unique:employee_auth,email,' . $employee->user_id,
             'password' => 'nullable|min:8|confirmed',
             'first_name' => 'required|string|max:50',
             'middle_name' => 'nullable|string|max:50',
@@ -344,18 +344,18 @@ class EmployeeController extends Controller
                     $photoPath = $request->file('profile_photo')->store('profile-photos', 'public');
                 }
 
-                // Update the User account for login
-                $user = $employee->user;
-                if ($user) {
-                    $userData = [
-                        'name' => trim($request->first_name . ' ' . $request->last_name),
+                // Update the employee authentication record for login
+                $employeeAuth = $employee->user;
+                if ($employeeAuth) {
+                    $employeeAuthData = [
+                        'first_name' => $request->first_name,
+                        'last_name' => $request->last_name,
                         'email' => $request->email,
-                        'profile_photo_path' => $photoPath,
                     ];
                     if ($request->filled('password')) {
-                        $userData['password'] = Hash::make($request->password);
+                        $employeeAuthData['password'] = $request->password;
                     }
-                    $user->update($userData);
+                    $employeeAuth->update($employeeAuthData);
                 }
 
                 // Update the Employee record

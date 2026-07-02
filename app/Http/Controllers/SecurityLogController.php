@@ -33,7 +33,7 @@ class SecurityLogController extends Controller
 
         $logs = $query->latest()->paginate(10)->withQueryString();
 
-        return view('admin.security.login_logs', compact('logs'));
+        return view('Superadmin.security.security-logs', compact('logs'));
     }
 
     public function unlock(Request $request)

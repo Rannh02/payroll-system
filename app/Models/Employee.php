@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Admin;
+use App\Models\EmployeeAuth;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -67,12 +69,12 @@ class Employee extends Model
 
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by', 'id');
+        return $this->belongsTo(Admin::class, 'created_by', 'id');
     }
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(EmployeeAuth::class, 'user_id', 'id');
     }
 
     public function getNameAttribute()

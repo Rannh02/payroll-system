@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Models\Admin;
+use App\Models\EmployeeAuth;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,22 +17,23 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // Admin Account
-        User::updateOrCreate(
+        Admin::updateOrCreate(
             ['email' => 'admin@via-architect.com'],
             [
                 'name' => 'Archi. Gabriel Bryan Licao',
-                'password' => bcrypt('Password@123'),
+                'password' => 'Password@123',
                 'role' => 'admin',
             ]
         );
 
-        // Regular User Account
-        User::updateOrCreate(
+        // Employee Account
+        EmployeeAuth::updateOrCreate(
             ['email' => 'user@via-architect.com'],
             [
-                'name' => 'User',
-                'password' => bcrypt('User@123'),
-                'role' => 'user',
+                'first_name' => 'User',
+                'last_name' => 'Account',
+                'password' => 'User@123',
+                'role' => 'employee',
             ]
         );
 

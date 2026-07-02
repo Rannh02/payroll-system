@@ -25,8 +25,10 @@ Route::prefix('superadmin')->name('superadmin.')->group(function () {
     Route::middleware('superadmin.auth')->group(function () {
         Route::get('/dashboard', [SuperAdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/analytics', [SuperAdminController::class, 'analytics'])->name('analytics');
+        Route::get('/security', [SuperAdminController::class, 'security'])->name('security');
         Route::get('/security-logs', [SuperAdminController::class, 'securityLogs'])->name('security_logs');
         Route::get('/Administrator', [SuperAdminController::class, 'Administrator'])->name('Administrator');
+        Route::post('/Administrator', [SuperAdminController::class, 'storeAdmin'])->name('Administrator.store');
         Route::get('/AuditLogs', [SuperAdminController::class, 'AuditLogs'])->name('AuditLogs');
 
 

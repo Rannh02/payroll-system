@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Models\Admin;
+use App\Models\EmployeeAuth;
 use App\Models\User;
 use App\Models\LoginLog;
 
@@ -84,15 +86,13 @@ class AuthController extends Controller
             return redirect()->route('superadmin.dashboard');
         }
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             RateLimiter::clear($throttleKey);
-            Log::info('Login successful for: ' . $request->email);
+            Log::info('Admin login successful for: ' . $request->email);
             $request->session()->regenerate();
 
-            $user = Auth::user();
-            
             LoginLog::create([
-                'user_id' => $user->id,
+                'user_id' => null,
                 'email' => $request->email,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
@@ -100,9 +100,22 @@ class AuthController extends Controller
                 'status' => 'SUCCESS',
             ]);
 
-            if ($user->role === 'admin') {
-                return redirect()->intended(route('dashboard'));
-            }
+            return redirect()->intended(route('dashboard'));
+        }
+
+        if (Auth::guard('employee')->attempt($credentials, $request->boolean('remember'))) {
+            RateLimiter::clear($throttleKey);
+            Log::info('Employee login successful for: ' . $request->email);
+            $request->session()->regenerate();
+
+            LoginLog::create([
+                'user_id' => null,
+                'email' => $request->email,
+                'ip_address' => $request->ip(),
+                'user_agent' => $request->userAgent(),
+                'browser' => $browser,
+                'status' => 'SUCCESS',
+            ]);
 
             return redirect()->intended(route('user.dashboard'));
         }
