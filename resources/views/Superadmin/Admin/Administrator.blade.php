@@ -2,27 +2,31 @@
 
 @section('title', 'Administrator - Control Deck')
 
-@section('content')
-    <div style="max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.5rem;">
+@section('styles')
+    <link rel="stylesheet" href="{{ asset('css/superadmin/superadmin-administrator.css') }}">
+@endsection
 
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px; color: white; box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);">
+@section('content')
+    <div class="superadmin-administrator-page">
+
+        <div class="superadmin-administrator-hero">
             <div>
                 <h2 style="margin: 0; font-size: 1.6rem; font-weight: 700;">Administrator Control Center</h2>
                 <p style="margin: 0.3rem 0 0; color: #cbd5e1;">Create and manage enterprise admin accounts with secure credentials.</p>
             </div>
-            <div style="padding: 0.7rem 1rem; background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; font-weight: 600;">
+            <div class="superadmin-administrator-badge">
                 Super Admin Workspace
             </div>
         </div>
 
         @if(session('success'))
-            <div style="padding: 1rem 1.2rem; border-radius: 12px; background: #ecfdf3; color: #166534; border: 1px solid #a7f3d0; font-weight: 600;">
+            <div class="superadmin-administrator-alert-success">
                 {{ session('success') }}
             </div>
         @endif
 
         @if($errors->any())
-            <div style="padding: 1rem 1.2rem; border-radius: 12px; background: #fef2f2; color: #991b1b; border: 1px solid #fecaca;">
+            <div class="superadmin-administrator-alert-error">
                 <ul style="margin: 0; padding-left: 18px;">
                     @foreach($errors->all() as $error)
                         <li>{{ $error }}</li>
@@ -31,8 +35,8 @@
             </div>
         @endif
 
-        <div style="display: grid; grid-template-columns: 1.05fr 0.95fr; gap: 1.5rem; align-items: start;">
-            <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0;">
+        <div class="superadmin-administrator-grid">
+            <div class="superadmin-administrator-card">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
                     <div>
                         <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;">Create New Admin</h3>
@@ -43,56 +47,77 @@
 
                 <form action="{{ route('superadmin.Administrator.store') }}" method="POST">
                     @csrf
-                    <div style="display: grid; gap: 1rem;">
-                        <div>
-                            <label style="display: block; margin-bottom: 0.35rem; font-weight: 600; color: #334155;">Full Name</label>
-                            <input type="text" name="name" value="{{ old('name') }}" required style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc;">
+                    <div class="superadmin-administrator-form-grid">
+                        <div class="superadmin-administrator-name-grid">
+                            <div>
+                                <label class="superadmin-administrator-label">First Name</label>
+                                <input type="text" name="first_name" value="{{ old('first_name') }}" required class="superadmin-administrator-input">
+                            </div>
+
+                            <div>
+                                <label class="superadmin-administrator-label">Middle Name</label>
+                                <input type="text" name="middle_name" value="{{ old('middle_name') }}" class="superadmin-administrator-input">
+                            </div>
+
+                            <div>
+                                <label class="superadmin-administrator-label">Last Name</label>
+                                <input type="text" name="last_name" value="{{ old('last_name') }}" required class="superadmin-administrator-input">
+                            </div>
                         </div>
 
                         <div>
-                            <label style="display: block; margin-bottom: 0.35rem; font-weight: 600; color: #334155;">Email Address</label>
-                            <input type="email" name="email" value="{{ old('email') }}" required style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc;">
+                            <label class="superadmin-administrator-label">Email Address</label>
+                            <input type="email" name="email" value="{{ old('email') }}" required class="superadmin-administrator-input">
                         </div>
 
                         <div>
-                            <label style="display: block; margin-bottom: 0.35rem; font-weight: 600; color: #334155;">Password</label>
-                            <input type="password" name="password" required style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc;">
+                            <label class="superadmin-administrator-label">Password</label>
+                            <input type="password" id="admin_password" name="password" required class="superadmin-administrator-input">
+                            <div id="admin-pw-strength-bar-wrap" class="superadmin-pw-strength">
+                                <div class="superadmin-pw-segment-row">
+                                    <div id="admin-pw-seg-1" class="superadmin-pw-segment"></div>
+                                    <div id="admin-pw-seg-2" class="superadmin-pw-segment"></div>
+                                    <div id="admin-pw-seg-3" class="superadmin-pw-segment"></div>
+                                </div>
+                                <p id="admin-pw-strength-text" class="superadmin-pw-text"></p>
+                                <p id="admin-pw-strength-hint" class="superadmin-pw-hint"></p>
+                            </div>
                             <p style="margin: 0.4rem 0 0; color: #64748b; font-size: 0.85rem;">Use 8–16 characters with uppercase, lowercase, a number, and a special character.</p>
                         </div>
 
                         <div>
-                            <label style="display: block; margin-bottom: 0.35rem; font-weight: 600; color: #334155;">Confirm Password</label>
-                            <input type="password" name="password_confirmation" required style="width: 100%; padding: 0.8rem 0.9rem; border: 1px solid #cbd5e1; border-radius: 10px; background: #f8fafc;">
+                            <label class="superadmin-administrator-label">Confirm Password</label>
+                            <input type="password" name="password_confirmation" required class="superadmin-administrator-input">
                         </div>
 
-                        <button type="submit" style="width: fit-content; padding: 0.8rem 1.2rem; border: none; border-radius: 10px; background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); color: white; font-weight: 700; cursor: pointer;">Create Admin Account</button>
+                        <button type="submit" class="superadmin-administrator-button">Create Admin Account</button>
                     </div>
                 </form>
             </div>
 
-            <div style="background: white; border-radius: 16px; padding: 1.5rem; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08); border: 1px solid #e2e8f0;">
+            <div class="superadmin-administrator-card">
                 <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
                     <div>
                         <h3 style="margin: 0; font-size: 1.1rem; font-weight: 700;">Admin Accounts</h3>
                         <p style="margin: 0.25rem 0 0; color: #64748b; font-size: 0.95rem;">Authorized Admin for the VIA Architects Payroll</p>
                     </div>
-                    <div style="padding: 0.45rem 0.8rem; border-radius: 999px; background: #f8fafc; color: #475569; font-weight: 700; font-size: 0.8rem;">{{ $admins->count() }} Total</div>
+                    <div class="superadmin-admin-count">{{ $admins->count() }} Total</div>
                 </div>
 
-                <table style="width: 100%; border-collapse: collapse;">
+                <table class="superadmin-admin-table">
                     <thead>
                         <tr style="border-bottom: 1px solid #e2e8f0; text-align: left; color: #64748b; font-size: 0.9rem;">
-                            <th style="padding: 0.75rem 0.5rem;">Name</th>
-                            <th style="padding: 0.75rem 0.5rem;">Email</th>
-                            <th style="padding: 0.75rem 0.5rem;">Role</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse($admins as $admin)
-                            <tr style="border-bottom: 1px solid #f1f5f9;">
-                                <td style="padding: 0.8rem 0.5rem; font-weight: 600; color: #0f172a;">{{ $admin->name }}</td>
-                                <td style="padding: 0.8rem 0.5rem; color: #475569;">{{ $admin->email }}</td>
-                                <td style="padding: 0.8rem 0.5rem;"><span style="padding: 0.25rem 0.6rem; border-radius: 999px; background: #dbeafe; color: #1d4ed8; font-size: 0.8rem; font-weight: 700;">{{ ucfirst($admin->role) }}</span></td>
+                            <tr>
+                                <td class="superadmin-admin-table-name">{{ $admin->name }}</td>
+                                <td class="superadmin-admin-table-email">{{ $admin->email }}</td>
+                                <td><span class="superadmin-admin-role">{{ ucfirst($admin->role) }}</span></td>
                             </tr>
                         @empty
                             <tr>
@@ -105,4 +130,5 @@
         </div>
 
     </div>
+    <script src="{{ asset('js/superadmin/superadmin-administrator.js') }}"></script>
 @endsection

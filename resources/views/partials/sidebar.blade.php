@@ -25,8 +25,8 @@
                 <span class="sidebar-text">Employees</span>
             </a>
 
-            <a href="{{ route('security_logs.login') }}"
-                class="sidebar-link {{ request()->routeIs('security_logs.login') ? 'sidebar-link-active' : '' }}">
+            <a href="{{ route('admin.security_logs') }}"
+                class="sidebar-link {{ request()->routeIs('admin.security_logs') ? 'sidebar-link-active' : '' }}">
                 <i data-lucide="shield" class="h-5 w-5"></i>
                 <span class="sidebar-text">Security Logs</span>
             </a>

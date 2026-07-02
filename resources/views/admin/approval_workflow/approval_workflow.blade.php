@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/manage-employee.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/approval_workflow.js') }}"></script>
+@endsection
+
 @section('content')
     <div class="max-w-[1600px] mx-auto">
         <div class="content-header">
@@ -87,13 +91,15 @@
                             <td>
                                 <div class="employee-action-group">
                                     @if($leave->status === 'pending')
-                                        <button type="button" class="employee-action-link action-approve"
-                                            onclick="openApproveModal('{{ route('approval_workflow.status', $leave->leave_request_id) }}', '{{ $leave->employee->first_name }} {{ $leave->employee->last_name }}')">
+                                        <button type="button" class="employee-action-link action-approve js-approve-leave"
+                                            data-action-url="{{ route('approval_workflow.status', $leave->leave_request_id) }}"
+                                            data-employee-name="{{ $leave->employee->first_name }} {{ $leave->employee->last_name }}">
                                             Approve
                                         </button>
                                         
-                                        <button type="button" class="employee-action-link action-archive"
-                                            onclick="openRejectModal('{{ route('approval_workflow.status', $leave->leave_request_id) }}', '{{ $leave->employee->first_name }} {{ $leave->employee->last_name }}')">
+                                        <button type="button" class="employee-action-link action-archive js-reject-leave"
+                                            data-action-url="{{ route('approval_workflow.status', $leave->leave_request_id) }}"
+                                            data-employee-name="{{ $leave->employee->first_name }} {{ $leave->employee->last_name }}">
                                             Reject
                                         </button>
                                     @else
@@ -131,7 +137,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeApproveModal()">Cancel</button>
+                <button type="button" class="btn-modal btn-modal-secondary" data-close-approve-modal>Cancel</button>
                 <form id="approve-form" method="POST" style="margin: 0;">
                     @csrf
                     @method('PATCH')
@@ -159,7 +165,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-modal btn-modal-secondary" onclick="closeRejectModal()">Cancel</button>
+                <button type="button" class="btn-modal btn-modal-secondary" data-close-reject-modal>Cancel</button>
                 <form id="reject-form" method="POST" style="margin: 0;">
                     @csrf
                     @method('PATCH')
@@ -169,36 +175,4 @@
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <script>
-        function openApproveModal(actionUrl, employeeName) {
-            document.getElementById('approve-form').action = actionUrl;
-            document.getElementById('approve-employee-name').textContent = employeeName;
-            document.getElementById('approve-modal').classList.add('show');
-        }
-
-        function closeApproveModal() {
-            document.getElementById('approve-modal').classList.remove('show');
-        }
-
-        function openRejectModal(actionUrl, employeeName) {
-            document.getElementById('reject-form').action = actionUrl;
-            document.getElementById('reject-employee-name').textContent = employeeName;
-            document.getElementById('reject-modal').classList.add('show');
-        }
-
-        function closeRejectModal() {
-            document.getElementById('reject-modal').classList.remove('show');
-        }
-        
-        // Close modals when clicking outside
-        window.addEventListener('click', function(event) {
-            const approveModal = document.getElementById('approve-modal');
-            const rejectModal = document.getElementById('reject-modal');
-            if (event.target === approveModal) closeApproveModal();
-            if (event.target === rejectModal) closeRejectModal();
-        });
-    </script>
 @endsection

@@ -7,6 +7,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/payroll.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/employees/payroll_run.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="max-w-full mx-auto px-6">
 
@@ -190,16 +194,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function filterTable() {
-        const search = document.getElementById('payrollSearch').value.toLowerCase();
-        const dept   = document.getElementById('deptFilter').value.toLowerCase();
-        document.querySelectorAll('.payroll-row').forEach(row => {
-            const nameMatch = row.dataset.name.includes(search);
-            const deptMatch = dept === '' || row.dataset.dept.toLowerCase() === dept;
-            row.style.display = (nameMatch && deptMatch) ? '' : 'none';
-        });
-    }
-</script>
-@endsection

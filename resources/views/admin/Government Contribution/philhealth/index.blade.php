@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/government-contribution/philhealth.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="govt-container">
     <div class="content-header">
@@ -16,7 +20,7 @@
             <h2 class="header-title">PhilHealth Contributions</h2>
             <p class="header-subtitle">Manage PhilHealth contribution brackets</p>
         </div>
-        <button class="btn-primary" onclick="openModal()">
+        <button class="btn-primary js-open-add-modal">
             <i data-lucide="plus"></i> Add Bracket
         </button>
     </div>
@@ -54,13 +58,11 @@
                         <td>{{ number_format($row->contribution_rate, 2) }}%</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="department-action-link"
-                                    onclick="openEditModal(
-                                        {{ $row->philhealth_id }},
-                                        '{{ $row->salary_from }}',
-                                        '{{ $row->salary_to }}',
-                                        '{{ $row->contribution_rate }}'
-                                    )">Edit</button>
+                                <button class="department-action-link js-edit-philhealth"
+                                    data-id="{{ $row->philhealth_id }}"
+                                    data-salary-from="{{ $row->salary_from }}"
+                                    data-salary-to="{{ $row->salary_to }}"
+                                    data-rate="{{ $row->contribution_rate }}">Edit</button>
                                 <form action="{{ route('philhealth.destroy', $row->philhealth_id) }}" method="POST"
                                     onsubmit="return confirm('Delete this PhilHealth bracket?')">
                                     @csrf @method('DELETE')
@@ -88,7 +90,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="modal-title">Add PhilHealth Bracket</h3>
-            <button class="btn-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <button class="btn-close js-close-add-modal"><i data-lucide="x"></i></button>
         </div>
         <form class="modal-form" action="{{ route('philhealth.store') }}" method="POST">
             @csrf
@@ -107,7 +109,7 @@
                 <input type="number" step="0.01" name="contribution_rate" class="form-input" placeholder="e.g. 4.00" value="{{ old('contribution_rate') }}" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn-secondary js-close-add-modal">Cancel</button>
                 <button type="submit" class="btn-primary">Save Bracket</button>
             </div>
         </form>
@@ -119,7 +121,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="modal-title">Edit PhilHealth Bracket</h3>
-            <button class="btn-close" onclick="closeEditModal()"><i data-lucide="x"></i></button>
+            <button class="btn-close js-close-edit-modal"><i data-lucide="x"></i></button>
         </div>
         <form class="modal-form" id="editForm" method="POST">
             @csrf @method('PUT')
@@ -138,7 +140,7 @@
                 <input type="number" step="0.01" name="contribution_rate" id="edit_contribution_rate" class="form-input" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="button" class="btn-secondary js-close-edit-modal">Cancel</button>
                 <button type="submit" class="btn-primary">Update Bracket</button>
             </div>
         </form>
@@ -146,33 +148,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function openModal() {
-        document.getElementById('philhealthModal').classList.add('show');
-        lucide.createIcons();
-    }
-    function closeModal() {
-        document.getElementById('philhealthModal').classList.remove('show');
-    }
-    function openEditModal(id, salaryFrom, salaryTo, rate) {
-        const form = document.getElementById('editForm');
-        form.action = `/philhealth/${id}`;
-        document.getElementById('edit_salary_from').value = salaryFrom;
-        document.getElementById('edit_salary_to').value = salaryTo;
-        document.getElementById('edit_contribution_rate').value = rate;
-        document.getElementById('philhealthEditModal').classList.add('show');
-        lucide.createIcons();
-    }
-    function closeEditModal() {
-        document.getElementById('philhealthEditModal').classList.remove('show');
-    }
-    window.onclick = function(e) {
-        if (e.target == document.getElementById('philhealthModal')) closeModal();
-        if (e.target == document.getElementById('philhealthEditModal')) closeEditModal();
-    };
-    @if($errors->any())
-        document.addEventListener('DOMContentLoaded', () => openModal());
-    @endif
-</script>
-@endsection

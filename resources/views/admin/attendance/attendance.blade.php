@@ -8,6 +8,10 @@
 <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/attendance.js') }}"></script>
+@endsection
+
 @section('content')
 
 <div class="govt-container">
@@ -341,47 +345,5 @@
     </div>
 
 </div>
-
-@endsection
-
-@section('scripts')
-
-<script>
-
-    function openModal() {
-        document
-            .getElementById('attendanceModal')
-            .classList
-            .add('show');
-
-        lucide.createIcons();
-    }
-
-    function closeModal() {
-        document
-            .getElementById('attendanceModal')
-            .classList
-            .remove('show');
-    }
-
-    window.onclick = function(e) {
-
-        if (e.target ==
-            document.getElementById('attendanceModal')) {
-
-            closeModal();
-        }
-    };
-
-    @if($errors->any())
-
-        document.addEventListener(
-            'DOMContentLoaded',
-            () => openModal()
-        );
-
-    @endif
-
-</script>
 
 @endsection

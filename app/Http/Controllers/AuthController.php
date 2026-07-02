@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Models\Admin;
 use App\Models\EmployeeAuth;
-use App\Models\User;
 use App\Models\LoginLog;
 
 class AuthController extends Controller
@@ -40,9 +39,8 @@ class AuthController extends Controller
             $seconds = RateLimiter::availableIn($throttleKey);
             $lockedUntil = now()->addSeconds($seconds);
             
-            $userAttempt = User::where('email', $request->email)->first();
             LoginLog::create([
-                'user_id' => $userAttempt ? $userAttempt->id : null,
+                'user_id' => null,
                 'email' => $request->email,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
@@ -56,11 +54,9 @@ class AuthController extends Controller
             ])->onlyInput('email');
         }
 
-        $userAttempt = User::where('email', $request->email)->first();
-
-        if ($userAttempt && $userAttempt->is_suspended) {
+        if (false) {
             LoginLog::create([
-                'user_id' => $userAttempt->id,
+                'user_id' => null,
                 'email' => $request->email,
                 'ip_address' => $request->ip(),
                 'user_agent' => $request->userAgent(),
@@ -90,6 +86,9 @@ class AuthController extends Controller
             RateLimiter::clear($throttleKey);
             Log::info('Admin login successful for: ' . $request->email);
             $request->session()->regenerate();
+
+            $request->session()->put('admin_id', Auth::guard('admin')->id());
+            $request->session()->put('admin_email', Auth::guard('admin')->user()->email);
 
             LoginLog::create([
                 'user_id' => null,
@@ -123,8 +122,6 @@ class AuthController extends Controller
         RateLimiter::hit($throttleKey, $decayMinutes * 60);
         Log::warning('Login failed for: ' . $request->email);
 
-        $userAttempt = User::where('email', $request->email)->first();
-        
         if (RateLimiter::tooManyAttempts($throttleKey, $maxAttempts)) {
             $seconds = RateLimiter::availableIn($throttleKey);
             $lockedUntil = now()->addSeconds($seconds);
@@ -135,7 +132,7 @@ class AuthController extends Controller
         }
 
         LoginLog::create([
-            'user_id' => $userAttempt ? $userAttempt->id : null,
+            'user_id' => null,
             'email' => $request->email,
             'ip_address' => $request->ip(),
             'user_agent' => $request->userAgent(),
@@ -166,24 +163,22 @@ class AuthController extends Controller
     {
         $request->validate(['email' => 'required|email']);
 
-        $user = User::where('email', $request->email)->first();
+        $user = EmployeeAuth::where('email', $request->email)->first() ?? Admin::where('email', $request->email)->first();
 
         if (!$user) {
-            return back()->withErrors(['email' => 'We could not find a user with that email address.']);
+            return back()->withErrors(['email' => 'We could not find an account with that email address.']);
         }
 
-        $token = app('auth.password.broker')->createToken($user);
+        $status = Password::broker('employees')->sendResetLink(['email' => $user->email]);
 
-        $resetUrl = route('password.reset', [
-            'token' => $token,
-            'email' => $user->email,
-        ]);
+        if ($status === Password::RESET_LINK_SENT) {
+            return back()->with([
+                'status' => 'A password reset link has been sent to your email address.',
+                'resetEmail' => $user->email,
+            ]);
+        }
 
-        return back()->with([
-            'status'    => 'A password reset link has been sent to your email address.',
-            'resetUrl'  => $resetUrl,
-            'resetEmail'=> $user->email,
-        ]);
+        return back()->withErrors(['email' => __($status)]);
     }
 
     public function showPasswordResetForm(string $token)
@@ -200,9 +195,9 @@ class AuthController extends Controller
             'password_confirmation' => 'required',
         ]);
 
-        $status = Password::reset(
+        $status = Password::broker('employees')->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
+            function (EmployeeAuth $user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));

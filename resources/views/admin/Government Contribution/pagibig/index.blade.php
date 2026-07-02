@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/government-contribution/pagibig.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="govt-container">
     <div class="content-header">
@@ -16,7 +20,7 @@
             <h2 class="header-title">Pag-IBIG Contributions</h2>
             <p class="header-subtitle">Manage Pag-IBIG (HDMF) contribution brackets</p>
         </div>
-        <button class="btn-primary" onclick="openModal()">
+        <button class="btn-primary js-open-add-modal">
             <i data-lucide="plus"></i> Add Bracket
         </button>
     </div>
@@ -58,15 +62,13 @@
                         <td>{{ number_format($row->maximum_contribution, 2) }}</td>
                         <td>
                             <div class="action-buttons">
-                                <button class="department-action-link"
-                                    onclick="openEditModal(
-                                        {{ $row->pagibig_id }},
-                                        '{{ $row->salary_from }}',
-                                        '{{ $row->salary_to }}',
-                                        '{{ $row->employee_rate }}',
-                                        '{{ $row->employer_rate }}',
-                                        '{{ $row->maximum_contribution }}'
-                                    )">Edit</button>
+                                <button class="department-action-link js-edit-pagibig"
+                                    data-id="{{ $row->pagibig_id }}"
+                                    data-salary-from="{{ $row->salary_from }}"
+                                    data-salary-to="{{ $row->salary_to }}"
+                                    data-employee-rate="{{ $row->employee_rate }}"
+                                    data-employer-rate="{{ $row->employer_rate }}"
+                                    data-maximum-contribution="{{ $row->maximum_contribution }}">Edit</button>
                                 <form action="{{ route('pagibig.destroy', $row->pagibig_id) }}" method="POST"
                                     onsubmit="return confirm('Delete this Pag-IBIG bracket?')">
                                     @csrf @method('DELETE')
@@ -94,7 +96,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="modal-title">Add Pag-IBIG Bracket</h3>
-            <button class="btn-close" onclick="closeModal()"><i data-lucide="x"></i></button>
+            <button class="btn-close js-close-add-modal"><i data-lucide="x"></i></button>
         </div>
         <form class="modal-form" action="{{ route('pagibig.store') }}" method="POST">
             @csrf
@@ -123,7 +125,7 @@
                 <input type="number" step="0.01" name="maximum_contribution" class="form-input" placeholder="e.g. 100.00" value="{{ old('maximum_contribution') }}" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn-secondary js-close-add-modal">Cancel</button>
                 <button type="submit" class="btn-primary">Save Bracket</button>
             </div>
         </form>
@@ -135,7 +137,7 @@
     <div class="modal-content">
         <div class="modal-header">
             <h3 class="modal-title">Edit Pag-IBIG Bracket</h3>
-            <button class="btn-close" onclick="closeEditModal()"><i data-lucide="x"></i></button>
+            <button class="btn-close js-close-edit-modal"><i data-lucide="x"></i></button>
         </div>
         <form class="modal-form" id="editForm" method="POST">
             @csrf @method('PUT')
@@ -164,7 +166,7 @@
                 <input type="number" step="0.01" name="maximum_contribution" id="edit_maximum_contribution" class="form-input" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="button" class="btn-secondary js-close-edit-modal">Cancel</button>
                 <button type="submit" class="btn-primary">Update Bracket</button>
             </div>
         </form>
@@ -172,35 +174,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function openModal() {
-        document.getElementById('pagibigModal').classList.add('show');
-        lucide.createIcons();
-    }
-    function closeModal() {
-        document.getElementById('pagibigModal').classList.remove('show');
-    }
-    function openEditModal(id, salaryFrom, salaryTo, empRate, erRate, maxContrib) {
-        const form = document.getElementById('editForm');
-        form.action = `/pagibig/${id}`;
-        document.getElementById('edit_salary_from').value = salaryFrom;
-        document.getElementById('edit_salary_to').value = salaryTo;
-        document.getElementById('edit_employee_rate').value = empRate;
-        document.getElementById('edit_employer_rate').value = erRate;
-        document.getElementById('edit_maximum_contribution').value = maxContrib;
-        document.getElementById('pagibigEditModal').classList.add('show');
-        lucide.createIcons();
-    }
-    function closeEditModal() {
-        document.getElementById('pagibigEditModal').classList.remove('show');
-    }
-    window.onclick = function(e) {
-        if (e.target == document.getElementById('pagibigModal')) closeModal();
-        if (e.target == document.getElementById('pagibigEditModal')) closeEditModal();
-    };
-    @if($errors->any())
-        document.addEventListener('DOMContentLoaded', () => openModal());
-    @endif
-</script>
-@endsection

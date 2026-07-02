@@ -18,7 +18,7 @@ class SuperadminAuthSpoof
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($request->session()->has('superadmin_id') && !Auth::guard('admin')->check()) {
+        if (!Auth::guard('admin')->check() && $request->session()->has('superadmin_id')) {
             $adminUser = Admin::latest()->first();
 
             if ($adminUser) {

@@ -1,0 +1,6 @@
+#photo-upload-form { display: none; }
+#pw-strength-bar-wrap { margin-top: 8px; display: none; }
+#pw-strength-bar-wrap > div { display: flex; gap: 5px; margin-bottom: 5px; }
+#pw-seg-1, #pw-seg-2, #pw-seg-3 { flex: 1; height: 4px; border-radius: 4px; background: #e2e8f0; transition: background 0.3s; }
+#pw-strength-text { font-size: 0.78rem; font-weight: 600; margin: 0; }
+#pw-strength-hint { font-size: 0.73rem; color: #64748b; margin: 3px 0 0 0; }

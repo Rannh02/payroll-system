@@ -26,7 +26,7 @@
 
     <!-- Filter Bar -->
     <div class="filter-bar-container">
-        <form action="{{ route('security_logs.login') }}" method="GET" class="filter-bar-form">
+        <form action="{{ route('admin.security_logs') }}" method="GET" class="filter-bar-form">
             
             <div class="filter-search-wrapper">
                 <input type="text" name="search" value="{{ request('search') }}" placeholder="Search email, IP, or reason..." class="filter-input">
@@ -49,7 +49,7 @@
 
             <div class="filter-btn-group">
                 <button type="submit" class="btn-filter-submit">Filter Logs</button>
-                <a href="{{ route('security_logs.login') }}" class="btn-filter-refresh">Refresh Filters</a>
+                <a href="{{ route('admin.security_logs') }}" class="btn-filter-refresh">Refresh Filters</a>
             </div>
         </form>
     </div>
@@ -65,12 +65,11 @@
                     <th>Browser</th>
                     <th>Status</th>
                     <th>Locked Until</th>
-                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($logs as $index => $log)
-                    <tr>
+                    <tr class="log-row" style="cursor: pointer;" data-log='@json($log)' data-user="{{ e($log->user ? $log->user->name : 'Unknown') }}">
                         <td>{{ $logs->firstItem() + $index }}</td>
                         <td>{{ $log->created_at->format('M d, Y h:i A') }}</td>
                         <td>
@@ -104,16 +103,10 @@
                                 <span class="text-muted">-</span>
                             @endif
                         </td>
-                        <td style="display: flex; gap: 5px; align-items: center;">
-                            <button type="button" class="department-action-link btn-view-log"
-                                onclick="openLogModal({{ json_encode($log) }}, {{ json_encode($log->user ? $log->user->name : 'Unknown') }})">
-                                View
-                            </button>
-                        </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="8" class="empty-state">No login logs found.</td>
+                        <td colspan="7" class="empty-state">No login logs found.</td>
                     </tr>
                 @endforelse
             </tbody>
@@ -164,71 +157,9 @@
                 <div id="modalLockedUntil"></div>
             </div>
             
-            <form id="unlockForm" action="{{ route('security_logs.unlock') }}" method="POST" class="unlock-form-container">
-                @csrf
-                <input type="hidden" name="log_id" id="unlockLogId">
-                <p class="unlock-alert-msg">
-                    This account is currently locked due to too many failed login attempts from this IP.
-                </p>
-                <div class="unlock-action-row">
-                    <button type="submit" class="btn-primary">Unlock Account</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>
 
-<script>
-    function openLogModal(log, userName) {
-        document.getElementById('logModal').classList.add('show');
-        
-        // Format Date
-        const dateObj = new Date(log.created_at);
-        document.getElementById('modalDate').textContent = dateObj.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
-        
-        document.getElementById('modalUser').textContent = userName;
-        document.getElementById('modalEmail').textContent = log.email;
-        document.getElementById('modalIp').textContent = log.ip_address;
-        document.getElementById('modalBrowser').textContent = log.browser || 'Unknown';
-        document.getElementById('modalUserAgent').textContent = log.user_agent;
-        
-        // Status Badge
-        let statusHtml = '';
-        if(log.status === 'SUCCESS') statusHtml = '<span class="badge badge-success">Success</span>';
-        else if(log.status === 'FAILED') statusHtml = '<span class="badge badge-danger">Failed</span>';
-        else if(log.status === 'LOCKED') statusHtml = '<span class="badge badge-warning">Locked</span>';
-        else if(log.status === 'UNLOCKED') statusHtml = '<span class="badge badge-info">Unlocked</span>';
-        else if(log.status === 'SUSPENDED') statusHtml = '<span class="badge badge-danger">Suspended</span>';
-        document.getElementById('modalStatus').innerHTML = statusHtml;
-        
-        // Locked Until
-        if(log.locked_until) {
-            const lockedDate = new Date(log.locked_until);
-            document.getElementById('modalLockedUntil').innerHTML = '<span class="locked-time-text">' + lockedDate.toLocaleString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true }) + '</span>';
-        } else {
-            document.getElementById('modalLockedUntil').innerHTML = '<span class="text-muted">N/A</span>';
-        }
-        
-        // Unlock Form
-        const unlockForm = document.getElementById('unlockForm');
-        if (log.status === 'LOCKED') {
-            document.getElementById('unlockLogId').value = log.id;
-            unlockForm.style.display = 'block';
-        } else {
-            unlockForm.style.display = 'none';
-        }
-    }
-
-    function closeLogModal() {
-        document.getElementById('logModal').classList.remove('show');
-    }
-
-    // Close modal when clicking outside
-    window.addEventListener('click', function(e) {
-        const modal = document.getElementById('logModal');
-        if (e.target === modal) {
-            closeLogModal();
-        }
-    });
-</script>
+<script src="{{ asset('js/admin/admin_security/login_logs.js') }}"></script>
 @endsection

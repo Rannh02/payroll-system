@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/position.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/position.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="govt-container">
     <div class="content-header">
@@ -15,12 +19,27 @@
             <h2 class="header-title">Positions</h2>
             <p class="header-subtitle">Manage job roles and compensation structures</p>
         </div>
-        <button class="btn-primary" onclick="openModal()">
-            <i data-lucide="plus"></i> Add Position
-        </button>
+        <div>
+            <button class="btn-primary" onclick="openModal()">
+                <i data-lucide="plus" class="h-4 w-4"></i>
+                Add Position
+            </button>
+        </div>
     </div>
 
     <x-alert />
+
+    @if(session('success'))
+        <div style="background:#d1fae5;color:#065f46;border:1px solid #6ee7b7;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+            <i data-lucide="check-circle" class="h-4 w-4"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if(session('error'))
+        <div style="background:#fee2e2;color:#991b1b;border:1px solid #fecaca;padding:12px 16px;border-radius:8px;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+            <i data-lucide="alert-circle" class="h-4 w-4"></i> {{ session('error') }}
+        </div>
+    @endif
 
     <div class="position-table-container">
         <table class="position-table">
@@ -110,7 +129,7 @@
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea name="description" class="form-input" style="height: 80px;" placeholder="Brief description...">{{ old('description') }}</textarea>
+                <textarea name="description" class="form-input" placeholder="Brief description...">{{ old('description') }}</textarea>
             </div>
             <div class="form-group">
                 <label>Status <span class="required">*</span></label>
@@ -128,30 +147,3 @@
 </div>
 @endsection
 
-@section('scripts')
-<script>
-    function openModal() {
-        document.getElementById('positionModal').classList.add('show');
-        if(typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('positionModal').classList.remove('show');
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('positionModal');
-        if (event.target == modal) closeModal();
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    @if($errors->any())
-        document.addEventListener('DOMContentLoaded', () => openModal());
-    @endif
-</script>
-@endsection

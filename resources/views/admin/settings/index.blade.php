@@ -4,6 +4,7 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/profile/style.css') }}">
+<link rel="stylesheet" href="{{ asset('css/admin/settings-page.css') }}">
 @endsection
 
 @section('content')
@@ -32,7 +33,7 @@
                             class="profile-camera-btn">
                         <i data-lucide="camera" class="profile-camera-icon"></i>
                     </button>
-                    <form id="photo-upload-form" action="{{ route('profile.photo.update') }}" method="POST" enctype="multipart/form-data" style="display: none;">
+                    <form id="photo-upload-form" action="{{ route('profile.photo.update') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <input type="file" name="profile_photo" id="profile_photo_input" onchange="document.getElementById('photo-upload-form').submit()">
                     </form>
@@ -122,14 +123,14 @@
                         <div class="form-group">
                             <label class="form-label">New Password</label>
                             <input type="password" id="new_password" name="password" class="form-input" placeholder="Min 15 chars: A-z, 0-9, symbols">
-                            <div id="pw-strength-bar-wrap" style="margin-top: 8px; display: none;">
-                                <div style="display: flex; gap: 5px; margin-bottom: 5px;">
-                                    <div id="pw-seg-1" style="flex:1; height:4px; border-radius:4px; background:#e2e8f0; transition:background 0.3s;"></div>
-                                    <div id="pw-seg-2" style="flex:1; height:4px; border-radius:4px; background:#e2e8f0; transition:background 0.3s;"></div>
-                                    <div id="pw-seg-3" style="flex:1; height:4px; border-radius:4px; background:#e2e8f0; transition:background 0.3s;"></div>
+                            <div id="pw-strength-bar-wrap">
+                                <div>
+                                    <div id="pw-seg-1"></div>
+                                    <div id="pw-seg-2"></div>
+                                    <div id="pw-seg-3"></div>
                                 </div>
-                                <p id="pw-strength-text" style="font-size:0.78rem; font-weight:600; margin:0;"></p>
-                                <p id="pw-strength-hint" style="font-size:0.73rem; color:#64748b; margin:3px 0 0 0;"></p>
+                                <p id="pw-strength-text"></p>
+                                <p id="pw-strength-hint"></p>
                             </div>
                         </div>
                         <div class="form-group">
@@ -148,59 +149,5 @@
 @endsection
 
 @section('scripts')
-<script>
-    function switchTab(tabId) {
-        document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-        document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-        event.currentTarget.classList.add('active');
-        document.getElementById(tabId + '-tab').classList.add('active');
-    }
-
-    // --- Password Strength Checker ---
-    const pwInput = document.getElementById('new_password');
-    if (pwInput) {
-        pwInput.addEventListener('input', function() { checkPasswordStrength(this.value); });
-    }
-
-    function checkPasswordStrength(val) {
-        const wrap = document.getElementById('pw-strength-bar-wrap');
-        const seg1 = document.getElementById('pw-seg-1');
-        const seg2 = document.getElementById('pw-seg-2');
-        const seg3 = document.getElementById('pw-seg-3');
-        const text = document.getElementById('pw-strength-text');
-        const hint = document.getElementById('pw-strength-hint');
-
-        if (!val) { wrap.style.display = 'none'; return; }
-        wrap.style.display = 'block';
-
-        const hasUpper   = /[A-Z]/.test(val);
-        const hasLower   = /[a-z]/.test(val);
-        const hasNumber  = /[0-9]/.test(val);
-        const hasSymbol  = /[^A-Za-z0-9]/.test(val);
-        const longEnough = val.length >= 15;
-
-        const score = [hasUpper, hasLower, hasNumber, hasSymbol, longEnough].filter(Boolean).length;
-
-        const hints = [];
-        if (!hasUpper)   hints.push('uppercase letter');
-        if (!hasLower)   hints.push('lowercase letter');
-        if (!hasNumber)  hints.push('number');
-        if (!hasSymbol)  hints.push('symbol');
-        if (!longEnough) hints.push('at least 15 characters');
-
-        let level, color, segs;
-        if (score <= 2)      { level = 'Weak';     color = '#ef4444'; segs = 1; }
-        else if (score <= 3) { level = 'Moderate'; color = '#f59e0b'; segs = 2; }
-        else                 { level = 'Strong';   color = '#22c55e'; segs = 3; }
-
-        seg1.style.background = segs >= 1 ? color : '#e2e8f0';
-        seg2.style.background = segs >= 2 ? color : '#e2e8f0';
-        seg3.style.background = segs >= 3 ? color : '#e2e8f0';
-
-        text.textContent = level;
-        text.style.color = color;
-        hint.textContent = hints.length ? 'Missing: ' + hints.join(', ') : '✓ All requirements met';
-        hint.style.color = hints.length ? '#94a3b8' : '#22c55e';
-    }
-</script>
+    <script src="{{ asset('js/admin/settings.js') }}"></script>
 @endsection

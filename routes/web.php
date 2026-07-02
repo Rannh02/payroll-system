@@ -15,6 +15,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\SuperAdminController;
 
 
@@ -90,7 +91,7 @@ Route::post('/register', function (Illuminate\Http\Request $request) {
     // Do not auto-login after registration. Send the user to login first.
     return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
 })->name('register.store');
-Route::middleware(['auth', 'employee'])->group(function () {
+Route::middleware(['auth:employee', 'employee'])->group(function () {
     // EMPLOYEE ROUTES (Strictly for Employees only)
     Route::get('/user-dashboard', [DashboardController::class, 'userIndex'])->name('user.dashboard');
 
@@ -110,7 +111,7 @@ Route::middleware(['auth', 'employee'])->group(function () {
 });
 
 // SHARED ROUTES (Accessible by both Employees and Admins)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth:admin'])->group(function () {
     Route::get('/profile/settings', function () {
         if (Illuminate\Support\Facades\Auth::user()->role === 'admin') {
             return view('admin.settings.index');
@@ -122,7 +123,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth:admin', 'admin'])->group(function () {
     // ADMIN ROUTES (Strictly for Admins only)
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics.index');
@@ -188,7 +189,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/reports/export/{type}', [ReportsController::class, 'export'])->name('reports.export');
 
     // Security Logs
-    Route::get('/security-logs/login', [App\Http\Controllers\SecurityLogController::class, 'loginLogs'])->name('security_logs.login');
+    Route::get('/security-logs/login', [SecurityLogController::class, 'loginLogs'])->name('admin.security_logs');
     Route::post('/security-logs/unlock', [App\Http\Controllers\SecurityLogController::class, 'unlock'])->name('security_logs.unlock');
     Route::post('/security-logs/toggle-suspend', [App\Http\Controllers\SecurityLogController::class, 'toggleSuspend'])->name('security_logs.suspend');
 });

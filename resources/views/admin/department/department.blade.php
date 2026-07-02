@@ -8,6 +8,10 @@
     <link rel="stylesheet" href="{{ asset('css/admin/department.css') }}">
 @endsection
 
+@section('scripts')
+    <script src="{{ asset('js/admin/department.js') }}"></script>
+@endsection
+
 @section('content')
 <div class="govt-container">
     <div class="content-header">
@@ -83,7 +87,7 @@
             </div>
             <div class="form-group">
                 <label>Description</label>
-                <textarea name="description" class="form-input" style="height: 100px;" placeholder="Brief description...">{{ old('description') }}</textarea>
+                <textarea name="description" class="form-input" placeholder="Brief description...">{{ old('description') }}</textarea>
             </div>
             <div class="form-group">
                 <label>Status <span class="required">*</span></label>
@@ -99,32 +103,4 @@
         </form>
     </div>
 </div>
-@endsection
-
-@section('scripts')
-<script>
-    function openModal() {
-        document.getElementById('departmentModal').classList.add('show');
-        if(typeof lucide !== 'undefined') {
-            lucide.createIcons();
-        }
-    }
-
-    function closeModal() {
-        document.getElementById('departmentModal').classList.remove('show');
-    }
-
-    window.onclick = function(event) {
-        const modal = document.getElementById('departmentModal');
-        if (event.target == modal) closeModal();
-    }
-
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'Escape') closeModal();
-    });
-
-    @if($errors->any())
-        document.addEventListener('DOMContentLoaded', () => openModal());
-    @endif
-</script>
 @endsection

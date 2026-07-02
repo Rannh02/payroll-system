@@ -16,8 +16,10 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!Auth::guard('admin')->check() || Auth::guard('admin')->user()->role !== 'admin') {
-            return redirect()->route('user.dashboard');
+        $admin = Auth::guard('admin')->user();
+
+        if (!$admin || !in_array((string) $admin->role, ['admin', 'superadmin'], true)) {
+            return redirect()->route('login');
         }
 
         return $next($request);

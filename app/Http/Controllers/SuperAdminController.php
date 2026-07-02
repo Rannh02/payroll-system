@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class SuperAdminController extends Controller
 {
@@ -28,7 +29,10 @@ class SuperAdminController extends Controller
     public function storeAdmin(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['nullable', 'string', 'max:255'],
+            'first_name' => ['nullable', 'string', 'max:50'],
+            'middle_name' => ['nullable', 'string', 'max:50'],
+            'last_name' => ['nullable', 'string', 'max:50'],
             'email' => ['required', 'email', 'max:255', 'unique:admin,email'],
             'password' => [
                 'required',
@@ -47,8 +51,20 @@ class SuperAdminController extends Controller
             'password.max' => 'Password must be between 8 and 16 characters long.',
         ]);
 
+        $fullName = trim($request->input('name') ?: implode(' ', array_filter([
+            $request->input('first_name'),
+            $request->input('middle_name'),
+            $request->input('last_name'),
+        ], fn ($value) => filled($value))));
+
+        if (blank($fullName)) {
+            throw ValidationException::withMessages([
+                'name' => 'Please provide a full name.',
+            ]);
+        }
+
         Admin::create([
-            'name' => $request->name,
+            'name' => $fullName,
             'email' => $request->email,
             'password' => $request->password,
             'role' => 'admin',
@@ -76,17 +92,14 @@ class SuperAdminController extends Controller
 
     public function securityLogs(Request $request)
     {
-        $query = \App\Models\LoginLog::with('user');
+        $query = \App\Models\LoginLog::query();
 
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
                 $q->where('email', 'like', "%{$search}%")
                     ->orWhere('ip_address', 'like', "%{$search}%")
-                    ->orWhere('browser', 'like', "%{$search}%")
-                    ->orWhereHas('user', function ($uq) use ($search) {
-                        $uq->where('name', 'like', "%{$search}%");
-                    });
+                    ->orWhere('browser', 'like', "%{$search}%");
             });
         }
 
@@ -105,13 +118,6 @@ class SuperAdminController extends Controller
 
     public function toggleSuspend(Request $request)
     {
-        $request->validate(['user_id' => 'required|exists:users,id']);
-
-        $user = \App\Models\User::findOrFail($request->user_id);
-        $user->is_suspended = !$user->is_suspended;
-        $user->save();
-
-        $action = $user->is_suspended ? 'suspended' : 'unsuspended';
-        return back()->with('success', "User account has been {$action} successfully.");
+        return back()->with('info', 'User suspension is disabled because the legacy users table has been removed.');
     }
 }

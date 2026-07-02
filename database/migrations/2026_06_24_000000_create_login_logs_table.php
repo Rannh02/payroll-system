@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('login_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->unsignedBigInteger('user_id')->nullable();
             $table->string('email');
             $table->string('ip_address')->nullable();
             $table->text('user_agent')->nullable();

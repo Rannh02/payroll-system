@@ -1,0 +1,195 @@
+.superadmin-administrator-page {
+    max-width: 1600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.superadmin-administrator-hero,
+.superadmin-administrator-card {
+    background: white;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    padding: 1.5rem;
+}
+
+.superadmin-administrator-hero {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: white;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.16);
+}
+
+.superadmin-administrator-badge {
+    padding: 0.7rem 1rem;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+    font-weight: 600;
+}
+
+.superadmin-administrator-alert-success {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: #ecfdf3;
+    color: #166534;
+    border: 1px solid #a7f3d0;
+    font-weight: 600;
+}
+
+.superadmin-administrator-alert-error {
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    background: #fef2f2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.superadmin-administrator-grid {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.superadmin-administrator-form-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.superadmin-administrator-name-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+.superadmin-administrator-label {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    color: #334155;
+}
+
+.superadmin-administrator-input {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #f8fafc;
+}
+
+.superadmin-administrator-button {
+    width: fit-content;
+    padding: 0.8rem 1.2rem;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.superadmin-admin-count {
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: #f8fafc;
+    color: #475569;
+    font-weight: 700;
+    font-size: 0.8rem;
+}
+
+.superadmin-admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.superadmin-admin-table thead tr {
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.superadmin-admin-table th {
+    padding: 0.75rem 0.5rem;
+}
+
+.superadmin-admin-table td {
+    padding: 0.8rem 0.5rem;
+}
+
+.superadmin-admin-table tbody tr {
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.superadmin-admin-table-name {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.superadmin-admin-table-email {
+    color: #475569;
+}
+
+.superadmin-admin-role {
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    background: #dbeafe;
+    color: #1d4ed8;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.superadmin-pw-strength {
+    margin-top: 8px;
+    display: none;
+}
+
+.superadmin-pw-segment-row {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 5px;
+}
+
+.superadmin-pw-segment {
+    flex: 1;
+    height: 4px;
+    border-radius: 4px;
+    background: #e2e8f0;
+    transition: background 0.3s;
+}
+
+.superadmin-pw-text {
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin: 0;
+}
+
+.superadmin-pw-hint {
+    font-size: 0.73rem;
+    color: #64748b;
+    margin: 3px 0 0 0;
+}
+
+@media (max-width: 1024px) {
+    .superadmin-administrator-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .superadmin-administrator-hero {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .superadmin-administrator-name-grid {
+        grid-template-columns: 1fr;
+    }
+}
