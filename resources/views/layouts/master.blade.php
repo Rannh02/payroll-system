@@ -30,9 +30,7 @@
     </script>
 </head>
 
-<body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-    <!-- Architectural Background Overlay -->
-    <div class="bg-architectural-overlay"></div>
+<body class="bg-white transition-colors duration-300">
 
     <div class="dashboard-layout">
         <!-- Top Navbar -->
@@ -71,7 +69,7 @@
                                     $targetRoute = $isAdmin ? route('approval_workflow.index') : route('user.my_requests');
                                     $title = $isAdmin ? 'Leave Request Pending' : 'Leave ' . ucfirst($leave->status);
                                     $icon = $leave->status === 'approved' ? 'check-circle' : ($leave->status === 'rejected' ? 'x-circle' : 'calendar');
-                                    $iconColor = $leave->status === 'approved' ? '#10b981' : ($leave->status === 'rejected' ? '#ef4444' : 'var(--primary)');
+                                    $iconColor = $leave->status === 'approved' ? '#111111' : ($leave->status === 'rejected' ? '#555555' : 'var(--primary)');
                                 @endphp
                                 <a href="{{ $targetRoute }}" class="notification-item">
                                     <div class="notification-icon-box"

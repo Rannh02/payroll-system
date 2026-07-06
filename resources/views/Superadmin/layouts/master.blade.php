@@ -32,9 +32,7 @@
     </script>
 </head>
 
-<body class="bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
-    <!-- Architectural Background Overlay -->
-    <div class="bg-architectural-overlay"></div>
+<body class="bg-white transition-colors duration-300">
 
     <div class="dashboard-layout">
         <!-- Top Navbar -->
