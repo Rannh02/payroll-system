@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class SuperAdminController extends Controller
@@ -33,6 +34,7 @@ class SuperAdminController extends Controller
             'first_name' => ['nullable', 'string', 'max:50'],
             'middle_name' => ['nullable', 'string', 'max:50'],
             'last_name' => ['nullable', 'string', 'max:50'],
+            'role' => ['required', Rule::in(['admin', 'it_admin', 'finance_admin'])],
             'email' => ['required', 'email', 'max:255', 'unique:admin,email'],
             'password' => [
                 'required',
@@ -67,7 +69,7 @@ class SuperAdminController extends Controller
             'name' => $fullName,
             'email' => $request->email,
             'password' => $request->password,
-            'role' => 'admin',
+            'role' => $request->role,
         ]);
 
         return back()->with('success', 'Admin account created successfully.');

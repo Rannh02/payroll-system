@@ -71,6 +71,16 @@
                         </div>
 
                         <div>
+                            <label class="superadmin-administrator-label">Role</label>
+                            <select name="role" required class="superadmin-administrator-input">
+                                <option value="" disabled {{ old('role') ? '' : 'selected' }}>Select a role</option>
+                                <option value="admin" {{ old('role') === 'admin' ? 'selected' : '' }}>HR Admin</option>
+                                <option value="it_admin" {{ old('role') === 'it_admin' ? 'selected' : '' }}>IT Admin</option>
+                                <option value="finance_admin" {{ old('role') === 'finance_admin' ? 'selected' : '' }}>Finance Admin</option>
+                            </select>
+                        </div>
+
+                        <div>
                             <label class="superadmin-administrator-label">Password</label>
                             <input type="password" id="admin_password" name="password" required class="superadmin-administrator-input">
                             <div id="admin-pw-strength-bar-wrap" class="superadmin-pw-strength">
