@@ -87,8 +87,9 @@ class AuthController extends Controller
             Log::info('Admin login successful for: ' . $request->email);
             $request->session()->regenerate();
 
-            $request->session()->put('admin_id', Auth::guard('admin')->id());
-            $request->session()->put('admin_email', Auth::guard('admin')->user()->email);
+            $adminUser = Auth::guard('admin')->user();
+            $request->session()->put('admin_id', $adminUser->id);
+            $request->session()->put('admin_email', $adminUser->email);
 
             LoginLog::create([
                 'user_id' => null,
@@ -98,6 +99,10 @@ class AuthController extends Controller
                 'browser' => $browser,
                 'status' => 'SUCCESS',
             ]);
+
+            if ($adminUser->role === 'it_admin') {
+                return redirect()->intended(route('it_admin.dashboard'));
+            }
 
             return redirect()->intended(route('dashboard'));
         }

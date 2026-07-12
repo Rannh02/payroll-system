@@ -16,6 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'admin'           => \App\Http\Middleware\AdminMiddleware::class,
+            'it_admin'        => \App\Http\Middleware\ItAdminMiddleware::class,
             'employee'        => \App\Http\Middleware\EmployeeMiddleware::class,
             'superadmin.auth' => \App\Http\Middleware\SuperadminAuthenticated::class,
         ]);

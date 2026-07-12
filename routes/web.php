@@ -194,6 +194,11 @@ Route::middleware(['auth:admin', 'admin'])->group(function () {
     Route::post('/security-logs/toggle-suspend', [App\Http\Controllers\SecurityLogController::class, 'toggleSuspend'])->name('security_logs.suspend');
 });
 
+Route::middleware(['auth:admin', 'it_admin'])->prefix('it_admin')->name('it_admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'itAdminDashboard'])->name('dashboard');
+    Route::get('/security-logs/login', [SecurityLogController::class, 'loginLogsIT'])->name('security_logs');
+});
+
 Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo.update');
 
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

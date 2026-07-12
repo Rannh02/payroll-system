@@ -5,7 +5,7 @@
             <i data-lucide="menu" class="h-5 w-5"></i>
         </button>
 
-        @if(Auth::check() && Auth::user()->role === 'admin')
+        @if(Auth::check() && (Auth::user()->role === 'admin'))
             <!-- Admin Navigation Items -->
             <a href="{{ route('dashboard') }}"
                 class="sidebar-link {{ request()->routeIs('dashboard') ? 'sidebar-link-active' : '' }}">
@@ -105,7 +105,23 @@
                 <span class="sidebar-text">Reports</span>
             </a>
 
+        @elseif (Auth::user()->role === 'it_admin')
+            <a href="{{ route('it_admin.dashboard') }}"
+                class="sidebar-link {{ request()->routeIs('it_admin.dashboard') ? 'sidebar-link-active' : '' }}">
+                <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                <span class="sidebar-text">Dashboard</span>
+            </a>
 
+            <a href="{{ route('analytics.index') }}"
+                class="sidebar-link {{ request()->routeIs('analytics.') ? 'sidebar-link-active' : '' }}">
+                <i data-lucide="line-chart" class="h-5 w-5"></i>
+                <span class="sidebar-text">Analytics</span>
+            </a>
+            <a href="{{ route('it_admin.security_logs') }}"
+                class="sidebar-link {{ request()->routeIs('it_admin.security_logs') ? 'sidebar-link-active' : '' }}">
+                <i data-lucide="shield" class="h-5 w-5"></i>
+                <span class="sidebar-text">Security Logs</span>
+            </a>
 
         @else
             <!-- Employee Navigation Items -->

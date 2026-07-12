@@ -76,6 +76,50 @@ class DashboardController extends Controller
         ));
     }
 
+    public function itAdminDashboard()
+    {
+        $totalUsers = \App\Models\User::count();
+        $activeUsers = \App\Models\LoginLog::where('status', 'SUCCESS')->whereDate('created_at', Carbon::today())->count();
+        $failedLogins = \App\Models\LoginLog::where('status', 'FAILED')->count();
+        $lockedAccounts = \App\Models\LoginLog::whereNotNull('locked_until')->count();
+        $alerts = \App\Models\LoginLog::where('status', 'FAILED')->orWhereNotNull('locked_until')->count();
+        $auditLogs = \App\Models\LoginLog::count();
+        $backupCount = 0;
+
+        $recentAlerts = \App\Models\LoginLog::where('status', 'FAILED')
+            ->orWhereNotNull('locked_until')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $recentLogins = \App\Models\LoginLog::where('status', 'SUCCESS')
+            ->latest()
+            ->take(5)
+            ->get();
+
+        $userStats = [
+            'total_users' => $totalUsers,
+            'admins' => \App\Models\User::where('role', 'admin')->count(),
+            'it_admins' => \App\Models\User::where('role', 'it_admin')->count(),
+            'superadmins' => \App\Models\User::where('role', 'superadmin')->count(),
+            'employees' => \App\Models\User::where('role', 'employee')->count(),
+            'suspended' => \App\Models\User::where('is_suspended', true)->count(),
+        ];
+
+        return view('it_admin.dashboard.itdashboard', compact(
+            'totalUsers',
+            'activeUsers',
+            'failedLogins',
+            'lockedAccounts',
+            'alerts',
+            'auditLogs',
+            'backupCount',
+            'recentAlerts',
+            'recentLogins',
+            'userStats'
+        ));
+    }
+
     public function userIndex()
     {
         $user = Auth::user();

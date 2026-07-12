@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 class SecurityLogController extends Controller
 {
-    public function loginLogs(Request $request)
+    private function buildLoginQuery(Request $request)
     {
         $query = LoginLog::query();
 
@@ -28,9 +28,21 @@ class SecurityLogController extends Controller
             $query->whereDate('created_at', $request->date);
         }
 
-        $logs = $query->latest()->paginate(10)->withQueryString();
+        return $query->latest()->paginate(10)->withQueryString();
+    }
+
+    public function loginLogs(Request $request)
+    {
+        $logs = $this->buildLoginQuery($request);
 
         return view('admin.admin_security.login_logs', compact('logs'));
+    }
+
+    public function loginLogsIT(Request $request)
+    {
+        $logs = $this->buildLoginQuery($request);
+
+        return view('it_admin.securitylogs.securitylogs', compact('logs'));
     }
 
     public function unlock(Request $request)

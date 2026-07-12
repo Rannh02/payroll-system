@@ -803,6 +803,226 @@ body {
     border-color: rgba(0, 0, 0, 0.1);
 }
 
+.dashboard-lower-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    margin-top: 2rem !important;
+    width: 100% !important;
+}
+
+.dashboard-panel {
+    width: 100% !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 1rem !important;
+    padding: 1.4rem !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+.dashboard-panel-header {
+    margin-bottom: 1.15rem !important;
+}
+
+.dashboard-panel-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.panel-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 0.9rem !important;
+    flex-shrink: 0 !important;
+}
+
+.panel-icon-red {
+    background: rgba(248, 113, 113, 0.12) !important;
+}
+
+.panel-icon-green {
+    background: rgba(52, 211, 153, 0.12) !important;
+}
+
+.panel-icon-purple {
+    background: rgba(168, 85, 247, 0.12) !important;
+}
+
+.dashboard-panel-heading {
+    margin: 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+}
+
+.dashboard-panel-subtitle {
+    margin: 0.25rem 0 0 !important;
+    color: var(--text-muted) !important;
+    font-size: 0.95rem !important;
+}
+
+.dashboard-panel-body {
+    overflow-x: auto !important;
+}
+
+.dashboard-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    min-width: 100% !important;
+}
+
+.dashboard-table th,
+.dashboard-table td {
+    padding: 0.9rem 0.75rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-main) !important;
+}
+
+.dashboard-table thead th {
+    text-transform: uppercase !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.04em !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+}
+
+.dashboard-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.dashboard-panel-list .dashboard-table td {
+    padding: 0.8rem 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.dashboard-panel-list .dashboard-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+.dashboard-panel-list strong {
+    color: var(--text-main) !important;
+}
+
+.dashboard-panel .empty-state {
+    padding: 1rem 0 !important;
+    text-align: center !important;
+    color: var(--text-muted) !important;
+}
+
+.it-admin-dashboard .dashboard-lower-stack {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+    margin-top: 2rem !important;
+    width: 100% !important;
+}
+
+.it-admin-dashboard .dashboard-panel {
+    width: 100% !important;
+    background: var(--card-bg) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 1rem !important;
+    padding: 1.4rem !important;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+}
+
+.it-admin-dashboard .dashboard-panel-header {
+    margin-bottom: 1.15rem !important;
+}
+
+.it-admin-dashboard .dashboard-panel-title {
+    display: flex !important;
+    align-items: center !important;
+    gap: 1rem !important;
+}
+
+.it-admin-dashboard .panel-icon {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 2.5rem !important;
+    height: 2.5rem !important;
+    border-radius: 0.9rem !important;
+    flex-shrink: 0 !important;
+}
+
+.it-admin-dashboard .panel-icon-red {
+    background: rgba(248, 113, 113, 0.12) !important;
+}
+
+.it-admin-dashboard .panel-icon-green {
+    background: rgba(52, 211, 153, 0.12) !important;
+}
+
+.it-admin-dashboard .panel-icon-purple {
+    background: rgba(168, 85, 247, 0.12) !important;
+}
+
+.it-admin-dashboard .dashboard-panel-heading {
+    margin: 0 !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    color: var(--text-main) !important;
+}
+
+.it-admin-dashboard .dashboard-panel-subtitle {
+    margin: 0.25rem 0 0 !important;
+    color: var(--text-muted) !important;
+    font-size: 0.95rem !important;
+}
+
+.it-admin-dashboard .dashboard-panel-body {
+    overflow-x: auto !important;
+}
+
+.it-admin-dashboard .dashboard-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    min-width: 100% !important;
+}
+
+.it-admin-dashboard .dashboard-table th,
+.it-admin-dashboard .dashboard-table td {
+    padding: 0.9rem 0.75rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-main) !important;
+}
+
+.it-admin-dashboard .dashboard-table thead th {
+    text-transform: uppercase !important;
+    font-size: 0.78rem !important;
+    letter-spacing: 0.04em !important;
+    font-weight: 700 !important;
+    color: var(--text-muted) !important;
+}
+
+.it-admin-dashboard .dashboard-table tbody tr:last-child td {
+    border-bottom: none !important;
+}
+
+.it-admin-dashboard .dashboard-panel-list .dashboard-table td {
+    padding: 0.8rem 0 !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+.it-admin-dashboard .dashboard-panel-list .dashboard-table tr:last-child td {
+    border-bottom: none !important;
+}
+
+.it-admin-dashboard .dashboard-panel-list strong {
+    color: var(--text-main) !important;
+}
+
+.it-admin-dashboard .dashboard-panel .empty-state {
+    padding: 1rem 0 !important;
+    text-align: center !important;
+    color: var(--text-muted) !important;
+}
+
 /* Extra master.blade.php styles */
 .dropdown-menu.notification-dropdown {
     width: 20rem;
