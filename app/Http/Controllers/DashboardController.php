@@ -241,24 +241,6 @@ class DashboardController extends Controller
 
     public function analytics()
     {
-        // Payroll expense – last 6 months (same logic as dashboard)
-        $payrollLabels = [];
-        $payrollData   = [];
-        for ($i = 5; $i >= 0; $i--) {
-            $month = \Carbon\Carbon::now()->subMonths($i);
-            $payrollLabels[] = $month->format('M');
-            $payrollData[]   = (float) Payroll::whereYear('payroll_date', $month->year)
-                ->whereMonth('payroll_date', $month->month)
-                ->sum('gross_pay');
-        }
-
-        // Leave status distribution
-        $leaveChartData = [
-            Leave_Request::where('status', 'approved')->count(),
-            Leave_Request::where('status', 'pending')->count(),
-            Leave_Request::where('status', 'rejected')->count(),
-        ];
-
         // 1. Login Activity Data (Weekly & Monthly)
         $loginWeeklyData = ['labels' => [], 'success' => [], 'failed' => []];
         for ($i = 3; $i >= 0; $i--) {
@@ -318,6 +300,32 @@ class DashboardController extends Controller
             $browserLabels = ['No Data'];
             $browserData = [1];
         }
+
+        if (Auth::user()->role === 'it_admin') {
+            return view('it_admin.analytics.analytic', compact(
+                'loginWeeklyData', 'loginMonthlyData',
+                'threat6m', 'threat3m',
+                'roleChartData', 'browserLabels', 'browserData'
+            ));
+        }
+
+        // Payroll expense – last 6 months (same logic as dashboard)
+        $payrollLabels = [];
+        $payrollData   = [];
+        for ($i = 5; $i >= 0; $i--) {
+            $month = \Carbon\Carbon::now()->subMonths($i);
+            $payrollLabels[] = $month->format('M');
+            $payrollData[]   = (float) Payroll::whereYear('payroll_date', $month->year)
+                ->whereMonth('payroll_date', $month->month)
+                ->sum('gross_pay');
+        }
+
+        // Leave status distribution
+        $leaveChartData = [
+            Leave_Request::where('status', 'approved')->count(),
+            Leave_Request::where('status', 'pending')->count(),
+            Leave_Request::where('status', 'rejected')->count(),
+        ];
 
         return view('admin.analytics.index', compact(
             'payrollLabels', 'payrollData', 'leaveChartData',

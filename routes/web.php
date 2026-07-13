@@ -17,6 +17,8 @@ use App\Http\Controllers\ReportsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\SecurityLogController;
 use App\Http\Controllers\SuperAdminController;
+use App\Http\Controllers\UserController;
+
 
 
 
@@ -188,15 +190,46 @@ Route::middleware(['auth:admin', 'admin'])->group(function () {
     Route::get('/reports/details/{type}', [ReportsController::class, 'details'])->name('reports.details');
     Route::get('/reports/export/{type}', [ReportsController::class, 'export'])->name('reports.export');
 
-    // Security Logs
     Route::get('/security-logs/login', [SecurityLogController::class, 'loginLogs'])->name('admin.security_logs');
     Route::post('/security-logs/unlock', [App\Http\Controllers\SecurityLogController::class, 'unlock'])->name('security_logs.unlock');
     Route::post('/security-logs/toggle-suspend', [App\Http\Controllers\SecurityLogController::class, 'toggleSuspend'])->name('security_logs.suspend');
+
 });
 
 Route::middleware(['auth:admin', 'it_admin'])->prefix('it_admin')->name('it_admin.')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'itAdminDashboard'])->name('dashboard');
+    
     Route::get('/security-logs/login', [SecurityLogController::class, 'loginLogsIT'])->name('security_logs');
+    Route::post('/security-logs/unlock', [SecurityLogController::class, 'unlockIT'])->name('security_logs.unlock');
+    Route::post('/security-logs/toggle-suspend', [SecurityLogController::class, 'toggleSuspendIT'])->name('security_logs.suspend');
+
+    //analytics
+    Route::get('/analytics', [DashboardController::class, 'analytics'])->name('analytics');
+
+    // Audit Logs
+    Route::get('/audit-logs', [SecurityLogController::class, 'auditLogs'])->name('audit_logs');
+
+    // Session Management
+    Route::get('/session-management', [SecurityLogController::class, 'sessionManagement'])->name('session_management');
+    Route::delete('/session-management/{sessionId}', [SecurityLogController::class, 'revokeSession'])->name('session_management.revoke');
+    Route::delete('/session-management', [SecurityLogController::class, 'revokeAllSessions'])->name('session_management.revoke_all');
+
+    // User Management
+    Route::get('/users', [UserController::class, 'index'])->name('users');
+    Route::get('/users/create-edit/{user?}', [UserController::class, 'createEdit'])->name('users.create_edit');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::put('/users/{user}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
+    Route::post('/users/{user}/toggle-suspend', [UserController::class, 'toggleSuspend'])->name('users.toggle-suspend');
+
+    // Roles & Permissions
+    Route::get('/roles', [UserController::class, 'rolesIndex'])->name('roles');
+
+    // Reports
+    Route::get('/reports/user-activity', [App\Http\Controllers\ITReportsController::class, 'userActivity'])->name('reports.user_activity');
+    Route::get('/reports/user-activity/pdf', [App\Http\Controllers\ITReportsController::class, 'exportUserActivityPdf'])->name('reports.user_activity.pdf');
+    Route::get('/reports/security-incident', [App\Http\Controllers\ITReportsController::class, 'securityIncident'])->name('reports.security_incident');
+    Route::get('/reports/security-incident/pdf', [App\Http\Controllers\ITReportsController::class, 'exportSecurityIncidentPdf'])->name('reports.security_incident.pdf');
 });
 
 Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo.update');

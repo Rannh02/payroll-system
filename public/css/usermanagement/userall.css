@@ -1,0 +1,239 @@
+/* Premium style additions for User Management */
+.user-mgmt-container {
+    max-w: 1600px;
+    margin: 0 auto;
+    padding: 1.5rem;
+}
+
+.filter-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.filter-input {
+    flex: 1;
+    min-width: 250px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1e293b;
+    transition: all 0.2s;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.filter-select {
+    min-width: 180px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    padding: 0.625rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: #1e293b;
+    cursor: pointer;
+}
+
+.user-table-wrapper {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.user-table th {
+    background: #f8fafc;
+    padding: 1rem 1.5rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    border-bottom: 1px solid #e2e8f0;
+    letter-spacing: 0.05em;
+}
+
+.user-table td {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 0.875rem;
+    color: #334155;
+    vertical-align: middle;
+}
+
+.user-table tr:last-child td {
+    border-bottom: none;
+}
+
+.user-avatar-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+}
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #3b82f6;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.875rem;
+    border: 2px solid #e2e8f0;
+}
+
+.user-name {
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.user-email {
+    font-size: 0.75rem;
+    color: #64748b;
+}
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.role-badge-superadmin {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.role-badge-admin {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.role-badge-it_admin {
+    background: #f3e8ff;
+    color: #6b21a8;
+}
+
+.role-badge-hr_admin {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.role-badge-finance_admin {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.role-badge-employee {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.875rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.status-badge-active {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-badge-suspended {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.actions-group {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-action {
+    padding: 0.3rem 0.7rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: background 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    text-decoration: none;
+}
+
+.btn-action-edit {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.btn-action-edit:hover {
+    background: #bfdbfe;
+}
+
+.btn-action-suspend {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.btn-action-suspend:hover {
+    background: #fde68a;
+}
+
+.btn-action-activate {
+    background: #d1fae5;
+    color: #047857;
+}
+
+.btn-action-activate:hover {
+    background: #a7f3d0;
+}
+
+.btn-action-delete {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.btn-action-delete:hover {
+    background: #fecaca;
+}
+
+.pagination-container {
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
