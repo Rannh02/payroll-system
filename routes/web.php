@@ -71,7 +71,7 @@ Route::post('/register', function (Illuminate\Http\Request $request) {
         'middle_name' => ['nullable', 'string', 'max:255'],
         'last_name' => ['required', 'string', 'max:255'],
         'suffix' => ['nullable', 'string', 'max:50'],
-        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users', 'unique:admin'],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
     ]);
 
@@ -83,12 +83,21 @@ Route::post('/register', function (Illuminate\Http\Request $request) {
     ]);
     $fullName = implode(' ', $nameParts);
 
-    $user = \App\Models\User::create([
-        'name' => $fullName,
-        'email' => $validated['email'],
-        'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
-        'role' => 'admin',
-    ]);
+    \Illuminate\Support\Facades\DB::transaction(function () use ($fullName, $validated) {
+        \App\Models\User::create([
+            'name' => $fullName,
+            'email' => $validated['email'],
+            'password' => \Illuminate\Support\Facades\Hash::make($validated['password']),
+            'role' => 'admin',
+        ]);
+
+        \App\Models\Admin::create([
+            'name' => $fullName,
+            'email' => $validated['email'],
+            'password' => $validated['password'], // Mutator hashes it
+            'role' => 'admin',
+        ]);
+    });
 
     // Do not auto-login after registration. Send the user to login first.
     return redirect()->route('login')->with('success', 'Registration successful! Please log in.');

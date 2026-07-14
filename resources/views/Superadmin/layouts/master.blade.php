@@ -61,12 +61,7 @@
                     </button>
 
                     
-                    <button id="notification-btn" class="icon-btn">
-                        <i data-lucide="bell" class="h-5 w-5"></i>
-                        
-                            <span class="notification-dot"></span>
-                        
-                    </button>
+                    
 
                     <!-- Dropdown Menu -->
                     <div id="profile-dropdown" class="dropdown-menu">

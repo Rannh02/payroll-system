@@ -24,6 +24,9 @@
             }
         })();
     </script>
+    <!-- Google reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -97,6 +100,17 @@
                     @enderror
                 </div>
 
+                {{-- Google reCAPTCHA widget --}}
+                <div class="form-group" style="margin-top:1.25rem; margin-bottom:1.25rem; display:flex; flex-direction:column; align-items:center;">
+                    <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
+
+                    @error('g-recaptcha-response')
+                        <span style="color:#ef4444; font-size:0.78rem; margin-top:0.5rem; display:block;">
+                            {{ $message }}
+                        </span>
+                    @enderror
+                </div>
+
                 <div class="form-options">
                     <label class="checkbox-group">
                         <input type="checkbox" name="remember">
@@ -121,6 +135,7 @@
     </div>
 
     <script>
+        // ── Password visibility toggle ───────────────────────────────
         document.addEventListener('DOMContentLoaded', () => {
             const togglePassword = document.querySelector('#togglePassword');
             const password = document.querySelector('#password');

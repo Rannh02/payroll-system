@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use App\Models\Admin;
 use App\Models\EmployeeAuth;
@@ -24,10 +25,49 @@ class AuthController extends Controller
     {
         Log::info('Login attempt for: ' . $request->email);
 
-        $credentials = $request->validate([
-            'email' => ['required'],
+        $rules = [
+            'email'    => ['required'],
             'password' => ['required'],
+            // Always require the checkbox to be clicked
+            'g-recaptcha-response' => ['required'],
+        ];
+
+        // On non-local environments, also verify the token with Google's API
+        if (!app()->environment('local', 'testing')) {
+            $rules['g-recaptcha-response'][] = function ($attribute, $value, $fail) {
+                $secret = config('services.recaptcha.secret_key');
+                if (empty($secret)) {
+                    return;
+                }
+
+                try {
+                    $response = Http::asForm()
+                        ->timeout(5)
+                        ->post('https://www.google.com/recaptcha/api/siteverify', [
+                            'secret'   => $secret,
+                            'response' => $value,
+                            'remoteip' => request()->ip(),
+                        ]);
+
+                    $data = $response->json();
+                    Log::debug('reCAPTCHA verify response', $data ?? []);
+
+                    if (!($data['success'] ?? false)) {
+                        $fail('The reCAPTCHA validation failed. Please try again.');
+                    }
+                } catch (\Exception $e) {
+                    Log::warning('reCAPTCHA verification error: ' . $e->getMessage());
+                    // Fail open: don't block login if Google API is unreachable
+                    return;
+                }
+            };
+        }
+
+        $request->validate($rules, [
+            'g-recaptcha-response.required' => 'Please complete the reCAPTCHA checkbox.',
         ]);
+
+        $credentials = $request->only('email', 'password');
 
         $throttleKey = Str::transliterate(Str::lower($request->input('email')).'|'.$request->ip());
         $maxAttempts = 3;
@@ -178,16 +218,20 @@ class AuthController extends Controller
             return back()->withErrors(['email' => 'We could not find an account with that email address.']);
         }
 
-        $status = Password::broker('employees')->sendResetLink(['email' => $user->email]);
+        $broker = $user instanceof Admin ? 'admins' : 'employees';
+        $token = Password::broker($broker)->createToken($user);
 
-        if ($status === Password::RESET_LINK_SENT) {
-            return back()->with([
-                'status' => 'A password reset link has been sent to your email address.',
-                'resetEmail' => $user->email,
-            ]);
+        try {
+            $user->sendPasswordResetNotification($token);
+        } catch (\Exception $e) {
+            Log::error("Failed to send password reset email: " . $e->getMessage());
         }
 
-        return back()->withErrors(['email' => __($status)]);
+        return back()->with([
+            'status' => 'A password reset link has been sent to your email address.',
+            'resetEmail' => $user->email,
+            'resetUrl' => route('password.reset', ['token' => $token, 'email' => $user->email]),
+        ]);
     }
 
     public function showPasswordResetForm(string $token)
@@ -204,13 +248,23 @@ class AuthController extends Controller
             'password_confirmation' => 'required',
         ]);
 
-        $status = Password::broker('employees')->reset(
+        $isAdmin = Admin::where('email', $request->email)->exists();
+        $broker = $isAdmin ? 'admins' : 'employees';
+
+        $status = Password::broker($broker)->reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (EmployeeAuth $user, string $password) {
+            function ($user, string $password) {
                 $user->forceFill([
                     'password' => Hash::make($password),
                 ])->setRememberToken(Str::random(60));
                 $user->save();
+
+                // Synchronize password to users table
+                $u = \App\Models\User::where('email', $user->email)->first();
+                if ($u) {
+                    $u->password = Hash::make($password);
+                    $u->save();
+                }
             }
         );
 

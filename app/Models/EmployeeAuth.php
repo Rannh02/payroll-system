@@ -47,4 +47,9 @@ class EmployeeAuth extends Authenticatable
     {
         return trim(($this->first_name ?? '') . ' ' . ($this->last_name ?? ''));
     }
+
+    public function employee()
+    {
+        return $this->hasOne(Employee::class, 'user_id', 'id');
+    }
 }
