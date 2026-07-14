@@ -41,9 +41,30 @@ class PayrollController extends Controller
         $from = $request->from;
         $to   = $request->to;
 
-        $employees = Employee::where('status', 'active')->get();
+        $employees = Employee::all();
 
         return view('admin.employees.payroll_run', compact('employees', 'from', 'to'));
+    }
+
+    // ─────────────────────────────────────────────
+    //  FINANCE ADMIN: Create/Run Payroll
+    // ─────────────────────────────────────────────
+    public function create(Request $request)
+    {
+        $from = $request->input('from', now()->startOfMonth()->toDateString());
+        $to   = $request->input('to', now()->endOfMonth()->toDateString());
+
+        $employees = Employee::with(['department', 'position'])->get();
+
+        $payrolls = Payroll::with(['employee', 'deductions'])
+            ->where(function ($query) use ($from, $to) {
+                $query->whereBetween('payroll_period_start', [$from, $to])
+                      ->orWhereBetween('payroll_period_end', [$from, $to]);
+            })
+            ->latest()
+            ->get();
+
+        return view('finance admin.payroll.create', compact('employees', 'payrolls', 'from', 'to'));
     }
 
     // Fixed: added PayrollService injection in the method signature
@@ -99,6 +120,12 @@ class PayrollController extends Controller
         $grossPay = $basicSalary;
         $netPay   = $grossPay - $totalDeductions;
 
+        $status = 'pending';
+        // Auto-flag discrepancies
+        if ($netPay <= 0 || $daysWorked == 0) {
+            $status = 'flagged';
+        }
+
         // 7. Save payroll record — corrected: single employee_id using the correct PK, no phantom columns
         $payroll = Payroll::create([
             'employee_id'          => $employee->employee_id,
@@ -110,6 +137,7 @@ class PayrollController extends Controller
             'gross_pay'            => $grossPay,
             'total_deductions'     => $totalDeductions,
             'net_pay'              => $netPay,
+            'status'               => $status,
         ]);
 
         // 8. Ensure deduction types exist, then save each deduction line item
@@ -207,5 +235,62 @@ class PayrollController extends Controller
         $breakdown     = $payrollService->compute($employee, $monthlySalary);
 
         return view('user.payslip.payslip', compact('employee', 'payroll', 'breakdown'));
+    }
+
+    // ─────────────────────────────────────────────
+    //  FINANCE ADMIN: Payroll History
+    // ─────────────────────────────────────────────
+    public function history(Request $request)
+    {
+        $from = $request->input('from', now()->subMonths(3)->startOfMonth()->toDateString());
+        $to   = $request->input('to', now()->endOfMonth()->toDateString());
+
+        $payrolls = Payroll::with(['employee', 'deductions'])
+            ->where(function ($query) use ($from, $to) {
+                $query->whereBetween('payroll_period_start', [$from, $to])
+                      ->orWhereBetween('payroll_period_end', [$from, $to]);
+            })
+            ->latest()
+            ->paginate(20);
+
+        return view('finance admin.payroll.history', compact('payrolls', 'from', 'to'));
+    }
+
+    // ─────────────────────────────────────────────
+    //  FINANCE ADMIN: Pending Approvals
+    // ─────────────────────────────────────────────
+    public function pendingApprovals(Request $request)
+    {
+        $payrolls = Payroll::with(['employee', 'deductions'])
+            ->where('status', 'pending')
+            ->latest()
+            ->paginate(20);
+
+        return view('finance admin.payroll.pending-approvals', compact('payrolls'));
+    }
+
+    // ─────────────────────────────────────────────
+    //  FINANCE ADMIN: Discrepancy Review
+    // ─────────────────────────────────────────────
+    public function discrepancyReview(Request $request)
+    {
+        $payrolls = Payroll::with(['employee', 'deductions'])
+            ->where('status', 'flagged')
+            ->latest()
+            ->paginate(20);
+
+        return view('finance admin.payroll.discrepancy-review', compact('payrolls'));
+    }
+
+    public function approve(Payroll $payroll)
+    {
+        $payroll->update(['status' => 'approved']);
+        return back()->with('success', 'Payroll run approved successfully.');
+    }
+
+    public function flag(Payroll $payroll)
+    {
+        $payroll->update(['status' => 'flagged']);
+        return back()->with('success', 'Payroll run flagged for discrepancy.');
     }
 }

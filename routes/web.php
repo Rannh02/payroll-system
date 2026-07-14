@@ -170,11 +170,6 @@ Route::middleware(['auth:admin', 'admin'])->group(function () {
     Route::put('/tax/{tax}', [TaxController::class, 'update'])->name('tax.update');
     Route::delete('/tax/{tax}', [TaxController::class, 'destroy'])->name('tax.destroy');
 
-    // Payroll Management
-    Route::post('/payroll/run/{employee}/{from}/{to}', [PayrollController::class, 'runForEmployee'])->name('payroll.run');
-    Route::get('/payroll/payslip-preview', [PayrollController::class, 'payslipPreview'])->name('payroll.payslip.preview');
-    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
-
     // Attendance Management
     Route::get('/attendance', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
@@ -194,6 +189,12 @@ Route::middleware(['auth:admin', 'admin'])->group(function () {
     Route::post('/security-logs/unlock', [App\Http\Controllers\SecurityLogController::class, 'unlock'])->name('security_logs.unlock');
     Route::post('/security-logs/toggle-suspend', [App\Http\Controllers\SecurityLogController::class, 'toggleSuspend'])->name('security_logs.suspend');
 
+});
+
+Route::middleware(['auth:admin', 'payroll_access'])->group(function () {
+    Route::post('/payroll/run/{employee}/{from}/{to}', [PayrollController::class, 'runForEmployee'])->name('payroll.run');
+    Route::get('/payroll/payslip-preview', [PayrollController::class, 'payslipPreview'])->name('payroll.payslip.preview');
+    Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
 });
 
 Route::middleware(['auth:admin', 'it_admin'])->prefix('it_admin')->name('it_admin.')->group(function () {
@@ -230,6 +231,35 @@ Route::middleware(['auth:admin', 'it_admin'])->prefix('it_admin')->name('it_admi
     Route::get('/reports/user-activity/pdf', [App\Http\Controllers\ITReportsController::class, 'exportUserActivityPdf'])->name('reports.user_activity.pdf');
     Route::get('/reports/security-incident', [App\Http\Controllers\ITReportsController::class, 'securityIncident'])->name('reports.security_incident');
     Route::get('/reports/security-incident/pdf', [App\Http\Controllers\ITReportsController::class, 'exportSecurityIncidentPdf'])->name('reports.security_incident.pdf');
+});
+
+// Finance Admin Routes
+Route::middleware(['auth:admin', 'finance_admin'])->prefix('finance_admin')->name('finance_admin.')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'financeAdminDashboard'])->name('dashboard');
+    
+    // Payroll Processing Routes
+    Route::get('/payroll/create', [PayrollController::class, 'create'])->name('payroll.create');
+    Route::get('/payroll/history', [PayrollController::class, 'history'])->name('payroll.history');
+    Route::get('/payroll/pending-approvals', [PayrollController::class, 'pendingApprovals'])->name('payroll.pending_approvals');
+    Route::get('/payroll/discrepancy-review', [PayrollController::class, 'discrepancyReview'])->name('payroll.discrepancy_review');
+    
+    Route::post('/payroll/{payroll}/approve', [PayrollController::class, 'approve'])->name('payroll.approve');
+    Route::post('/payroll/{payroll}/flag', [PayrollController::class, 'flag'])->name('payroll.flag');
+    
+    // Deductions & Contributions Routes
+    Route::get('/deductions/government-contributions', [ReportsController::class, 'governmentContributions'])->name('deductions.government');
+    Route::get('/deductions/loans', [ReportsController::class, 'loanDeductions'])->name('deductions.loans');
+    Route::get('/deductions/other', [ReportsController::class, 'otherDeductions'])->name('deductions.other');
+    
+    // Allowances & Reimbursements Routes
+    Route::get('/allowances/pending-claims', [ReportsController::class, 'pendingClaims'])->name('allowances.pending');
+    Route::get('/allowances/approved-claims', [ReportsController::class, 'approvedClaims'])->name('allowances.approved');
+    
+    // Reports Routes
+    Route::get('/reports/payroll-summary', [ReportsController::class, 'payrollSummary'])->name('reports.payroll_summary');
+    Route::get('/reports/government-remittance', [ReportsController::class, 'governmentRemittance'])->name('reports.government_remittance');
+    Route::get('/reports/tax-bIR', [ReportsController::class, 'taxBIR'])->name('reports.tax_bir');
+    Route::get('/reports/payroll-cost-trends', [ReportsController::class, 'payrollCostTrends'])->name('reports.cost_trends');
 });
 
 Route::post('/profile/photo', [App\Http\Controllers\ProfileController::class, 'updatePhoto'])->name('profile.photo.update');

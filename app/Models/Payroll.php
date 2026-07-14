@@ -29,6 +29,7 @@ class Payroll extends Model
         // Summary
         'total_deductions',
         'net_pay',
+        'status',
     ];
 
     public function employee()

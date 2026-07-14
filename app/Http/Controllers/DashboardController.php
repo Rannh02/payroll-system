@@ -120,6 +120,61 @@ class DashboardController extends Controller
         ));
     }
 
+    public function financeAdminDashboard()
+    {
+        $currentYear = Carbon::now()->year;
+        $currentMonth = Carbon::now()->month;
+
+        // KPI Calculations
+        $totalPayrollCost = Payroll::whereYear('payroll_date', $currentYear)->sum('gross_pay');
+        $netPayDisbursed = Payroll::whereYear('payroll_date', $currentYear)->sum('net_pay');
+
+        $start = Carbon::now()->startOfMonth()->toDateString();
+        $end = Carbon::now()->endOfMonth()->toDateString();
+        $hasPayrollCount = Payroll::where(function ($query) use ($start, $end) {
+                $query->whereBetween('payroll_period_start', [$start, $end])
+                      ->orWhereBetween('payroll_period_end', [$start, $end]);
+            })
+            ->distinct('employee_id')
+            ->count('employee_id');
+        $activeEmployeesCount = Employee::count();
+        $pendingRuns = max(0, $activeEmployeesCount - $hasPayrollCount);
+
+        $awaitingApproval = Payroll::where('status', 'pending')->count();
+
+        $totalDeductions = Payroll::whereYear('payroll_date', $currentYear)
+            ->whereMonth('payroll_date', $currentMonth)
+            ->sum('total_deductions');
+
+        $govContributions = \App\Models\Payroll_Deduction::whereHas('payroll', function($q) use ($currentYear) {
+            $q->whereYear('payroll_date', $currentYear);
+        })->sum('deduction_amount');
+
+        $pendingClaims = Leave_Request::where('status', 'Pending')->count();
+        $flaggedDiscrepancies = Payroll::where('status', 'flagged')->count();
+
+        $deadline = Carbon::now()->day(20);
+        if (Carbon::now()->day > 20) {
+            $deadline->addMonth();
+        }
+        $upcomingDeadlines = $deadline->format('M d, Y');
+
+        $ytdPayrollExpense = $totalPayrollCost; // Year-to-date gross cost
+
+        return view('finance admin.finance_dashboard', compact(
+            'totalPayrollCost',
+            'netPayDisbursed',
+            'pendingRuns',
+            'awaitingApproval',
+            'totalDeductions',
+            'govContributions',
+            'pendingClaims',
+            'flaggedDiscrepancies',
+            'upcomingDeadlines',
+            'ytdPayrollExpense'
+        ));
+    }
+
     public function userIndex()
     {
         $user = Auth::user();

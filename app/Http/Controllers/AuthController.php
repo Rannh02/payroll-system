@@ -104,6 +104,10 @@ class AuthController extends Controller
                 return redirect()->intended(route('it_admin.dashboard'));
             }
 
+            if ($adminUser->role === 'finance_admin') {
+                return redirect()->intended(route('finance_admin.dashboard'));
+            }
+
             return redirect()->intended(route('dashboard'));
         }
 

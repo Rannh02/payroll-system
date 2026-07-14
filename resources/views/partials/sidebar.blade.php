@@ -203,6 +203,147 @@
             </div>
             
 
+        @elseif (Auth::user()->role === 'finance_admin')
+            <a href="{{ route('finance_admin.dashboard') }}"
+                class="sidebar-link {{ request()->routeIs('finance_admin.dashboard') ? 'sidebar-link-active' : '' }}">
+                <i data-lucide="layout-dashboard" class="h-5 w-5"></i>
+                <span class="sidebar-text">Dashboard</span>
+            </a>
+
+            <!-- Payroll Processing Section -->
+            <div>
+                <button type="button" class="sidebar-link" onclick="togglePayrollMenu()"
+                    style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <i data-lucide="briefcase" class="h-5 w-5"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Payroll Processing</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="payroll-chevron" class="h-4 w-4 transition-transform duration-200"></i>
+                </button>
+                <div id="payroll-submenu" style="display: none; padding-left: 1rem; margin-top: 0.25rem;">
+                    <a href="{{ route('finance_admin.payroll.create') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.payroll.create') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="plus" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Create Payroll Run</span>
+                    </a>
+                    <a href="{{ route('finance_admin.payroll.history') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.payroll.history') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="history" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Payroll Run History</span>
+                    </a>
+                    <a href="{{ route('finance_admin.payroll.pending_approvals') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.payroll.pending_approvals') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="clock" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Pending Approvals</span>
+                    </a>
+                    <a href="{{ route('finance_admin.payroll.discrepancy_review') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.payroll.discrepancy_review') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="circle-question-mark" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Payroll Discrepancy Review</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Deductions & Contributions Section -->
+            <div>
+                <button type="button" class="sidebar-link" onclick="toggleDeductionsMenu()"
+                    style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <i data-lucide="calculator" class="h-5 w-5"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Deductions & Contributions</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="deductions-chevron" class="h-4 w-4 transition-transform duration-200"></i>
+                </button>
+                <div id="deductions-submenu" style="display: none; padding-left: 1rem; margin-top: 0.25rem;">
+                    <a href="{{ route('finance_admin.deductions.government') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.deductions.government') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="building" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Government Contributions</span>
+                    </a>
+                    <a href="{{ route('finance_admin.deductions.loans') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.deductions.loans') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="credit-card" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Loan Deductions</span>
+                    </a>
+                    <a href="{{ route('finance_admin.deductions.other') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.deductions.other') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="list" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Other Deductions</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Allowances & Reimbursements Section -->
+            <div>
+                <button type="button" class="sidebar-link" onclick="toggleAllowancesMenu()"
+                    style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <i data-lucide="gift" class="h-5 w-5"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Allowances & Reimbursements</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="allowances-chevron" class="h-4 w-4 transition-transform duration-200"></i>
+                </button>
+                <div id="allowances-submenu" style="display: none; padding-left: 1rem; margin-top: 0.25rem;">
+                    <a href="{{ route('finance_admin.allowances.pending') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.allowances.pending') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="inbox" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Pending Claims</span>
+                    </a>
+                    <a href="{{ route('finance_admin.allowances.approved') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.allowances.approved') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="check-circle" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Approved Claims</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Reports & Analytics Section -->
+            <div>
+                <button type="button" class="sidebar-link" onclick="toggleFinanceReportsMenu()"
+                    style="width: 100%; border: none; background: transparent; text-align: left; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="display: flex; align-items: center;">
+                        <i data-lucide="bar-chart-3" class="h-5 w-5"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Reports & Analytics</span>
+                    </span>
+                    <i data-lucide="chevron-down" id="finance-reports-chevron" class="h-4 w-4 transition-transform duration-200"></i>
+                </button>
+                <div id="finance-reports-submenu" style="display: none; padding-left: 1rem; margin-top: 0.25rem;">
+                    <a href="{{ route('finance_admin.reports.payroll_summary') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.reports.payroll_summary') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="file-text" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Payroll Summary Report</span>
+                    </a>
+                    <a href="{{ route('finance_admin.reports.government_remittance') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.reports.government_remittance') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="building" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Government Remittance Report</span>
+                    </a>
+                    <a href="{{ route('finance_admin.reports.tax_bir') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.reports.tax_bir') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="file-earmark-text" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Tax (BIR) Report</span>
+                    </a>
+                    <a href="{{ route('finance_admin.reports.cost_trends') }}"
+                        class="sidebar-link {{ request()->routeIs('finance_admin.reports.cost_trends') ? 'sidebar-link-active' : '' }}"
+                        style="padding-top: 0.5rem; padding-bottom: 0.5rem;">
+                        <i data-lucide="trending-up" class="h-4 w-4"></i>
+                        <span class="sidebar-text" style="margin-left: 0.875rem;">Payroll Cost Trends</span>
+                    </a>
+                </div>
+            </div>
+
         @else
             <!-- Employee Navigation Items -->
             <a href="{{ route('user.dashboard') }}"
@@ -261,6 +402,47 @@
             localStorage.setItem('userMenuOpen', !isOpen);
         }
 
+        // Finance Admin Menu Toggles
+        function togglePayrollMenu() {
+            const submenu = document.getElementById('payroll-submenu');
+            const chevron = document.getElementById('payroll-chevron');
+            const isOpen = submenu.style.display !== 'none';
+
+            submenu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            localStorage.setItem('payrollMenuOpen', !isOpen);
+        }
+
+        function toggleDeductionsMenu() {
+            const submenu = document.getElementById('deductions-submenu');
+            const chevron = document.getElementById('deductions-chevron');
+            const isOpen = submenu.style.display !== 'none';
+
+            submenu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            localStorage.setItem('deductionsMenuOpen', !isOpen);
+        }
+
+        function toggleAllowancesMenu() {
+            const submenu = document.getElementById('allowances-submenu');
+            const chevron = document.getElementById('allowances-chevron');
+            const isOpen = submenu.style.display !== 'none';
+
+            submenu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            localStorage.setItem('allowancesMenuOpen', !isOpen);
+        }
+
+        function toggleFinanceReportsMenu() {
+            const submenu = document.getElementById('finance-reports-submenu');
+            const chevron = document.getElementById('finance-reports-chevron');
+            const isOpen = submenu.style.display !== 'none';
+
+            submenu.style.display = isOpen ? 'none' : 'block';
+            chevron.style.transform = isOpen ? 'rotate(0deg)' : 'rotate(180deg)';
+            localStorage.setItem('financeReportsMenuOpen', !isOpen);
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             // Reports submenu persistence
             const reportsSubmenu = document.getElementById('reports-submenu');
@@ -299,6 +481,58 @@
             if (userActive || savedOpen) {
                 submenu.style.display = 'block';
                 chevron.style.transform = 'rotate(180deg)';
+            }
+
+            // Finance Admin Payroll Menu persistence
+            const payrollSubmenu = document.getElementById('payroll-submenu');
+            const payrollChevron = document.getElementById('payroll-chevron');
+            if (payrollSubmenu && payrollChevron) {
+                const payrollActive = {{ request()->routeIs('finance_admin.payroll.*') ? 'true' : 'false' }};
+                const payrollSavedOpen = localStorage.getItem('payrollMenuOpen') === 'true';
+
+                if (payrollActive || payrollSavedOpen) {
+                    payrollSubmenu.style.display = 'block';
+                    payrollChevron.style.transform = 'rotate(180deg)';
+                }
+            }
+
+            // Finance Admin Deductions Menu persistence
+            const deductionsSubmenu = document.getElementById('deductions-submenu');
+            const deductionsChevron = document.getElementById('deductions-chevron');
+            if (deductionsSubmenu && deductionsChevron) {
+                const deductionsActive = {{ request()->routeIs('finance_admin.deductions.*') ? 'true' : 'false' }};
+                const deductionsSavedOpen = localStorage.getItem('deductionsMenuOpen') === 'true';
+
+                if (deductionsActive || deductionsSavedOpen) {
+                    deductionsSubmenu.style.display = 'block';
+                    deductionsChevron.style.transform = 'rotate(180deg)';
+                }
+            }
+
+            // Finance Admin Allowances Menu persistence
+            const allowancesSubmenu = document.getElementById('allowances-submenu');
+            const allowancesChevron = document.getElementById('allowances-chevron');
+            if (allowancesSubmenu && allowancesChevron) {
+                const allowancesActive = {{ request()->routeIs('finance_admin.allowances.*') ? 'true' : 'false' }};
+                const allowancesSavedOpen = localStorage.getItem('allowancesMenuOpen') === 'true';
+
+                if (allowancesActive || allowancesSavedOpen) {
+                    allowancesSubmenu.style.display = 'block';
+                    allowancesChevron.style.transform = 'rotate(180deg)';
+                }
+            }
+
+            // Finance Admin Reports Menu persistence
+            const financeReportsSubmenu = document.getElementById('finance-reports-submenu');
+            const financeReportsChevron = document.getElementById('finance-reports-chevron');
+            if (financeReportsSubmenu && financeReportsChevron) {
+                const financeReportsActive = {{ request()->routeIs('finance_admin.reports.*') ? 'true' : 'false' }};
+                const financeReportsSavedOpen = localStorage.getItem('financeReportsMenuOpen') === 'true';
+
+                if (financeReportsActive || financeReportsSavedOpen) {
+                    financeReportsSubmenu.style.display = 'block';
+                    financeReportsChevron.style.transform = 'rotate(180deg)';
+                }
             }
         });
     </script>
