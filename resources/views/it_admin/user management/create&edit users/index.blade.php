@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('it_admin.layouts.master')
 
 @section('title', isset($user) ? 'Edit User — VIA Payroll' : 'Create User — VIA Payroll')
 

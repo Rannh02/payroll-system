@@ -72,15 +72,40 @@ class SuperAdminController extends Controller
             'role' => $request->role,
         ]);
 
+        \App\Services\AuditLogger::log('Created Admin', "Created {$request->role} account for {$fullName}.");
+
         return back()->with('success', 'Admin account created successfully.');
     }
 
-    public function AuditLogs()
+    public function AuditLogs(Request $request)
     {
-        return view('Superadmin.Audit-Logs.AuditLogs');
+        $query = \App\Models\AuditLog::query();
+
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('user_name', 'like', "%{$search}%")
+                    ->orWhere('role', 'like', "%{$search}%")
+                    ->orWhere('action', 'like', "%{$search}%")
+                    ->orWhere('ip_address', 'like', "%{$search}%");
+            });
+        }
+
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        if ($request->filled('date')) {
+            $query->whereDate('created_at', $request->date);
+        }
+
+        $logs = $query->latest()->paginate(10)->withQueryString();
+
+        return view('Superadmin.Audit-Logs.AuditLogs', compact('logs'));
     }
     public function logout(Request $request)
     {
+        \App\Services\AuditLogger::log('Logged Out', 'Superadmin logged out of the system.');
         $request->session()->forget(['superadmin_id', 'superadmin_username']);
         $request->session()->regenerate();
 

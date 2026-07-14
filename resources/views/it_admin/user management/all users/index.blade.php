@@ -1,10 +1,26 @@
-@extends('layouts.master')
+@extends('it_admin.layouts.master')
 
 @section('title', 'User Management - VIA Architects Associates')
 
 @section('styles')
     <link rel="stylesheet" href="{{ asset('css/common/modals.css') }}">
     <link rel="stylesheet" href="{{ asset('css/usermanagement/userall.css') }}?v={{ filemtime(public_path('css/usermanagement/userall.css')) }}">
+    <style>
+        /* Ensure action buttons stay compact under superadmin layout */
+        .actions-group { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+        .actions-group a,
+        .actions-group button {
+            padding: 0.28rem 0.6rem !important;
+            font-size: 0.71rem !important;
+            min-height: unset !important;
+            height: auto !important;
+            line-height: 1.4 !important;
+        }
+        .actions-group svg {
+            width: 12px !important;
+            height: 12px !important;
+        }
+    </style>
 @endsection
 
 @section('content')

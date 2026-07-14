@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('it_admin.layouts.master')
 
 @section('title', 'Security Logs')
 

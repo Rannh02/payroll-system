@@ -118,6 +118,8 @@ class AuthController extends Controller
             $request->session()->put('superadmin_id', $superadmin->superadmin_id);
             $request->session()->put('superadmin_username', $superadmin->username);
             $request->session()->regenerate();
+            
+            \App\Services\AuditLogger::log('Logged In', 'Superadmin authenticated successfully.');
 
             return redirect()->route('superadmin.dashboard');
         }
@@ -139,6 +141,8 @@ class AuthController extends Controller
                 'browser' => $browser,
                 'status' => 'SUCCESS',
             ]);
+            
+            \App\Services\AuditLogger::log('Logged In', 'Admin authenticated successfully.');
 
             if ($adminUser->role === 'it_admin') {
                 return redirect()->intended(route('it_admin.dashboard'));
@@ -164,6 +168,8 @@ class AuthController extends Controller
                 'browser' => $browser,
                 'status' => 'SUCCESS',
             ]);
+            
+            \App\Services\AuditLogger::log('Logged In', 'Employee authenticated successfully.');
 
             return redirect()->intended(route('user.dashboard'));
         }
@@ -197,6 +203,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        \App\Services\AuditLogger::log('Logged Out', 'User logged out of the system.');
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();

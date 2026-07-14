@@ -1,4 +1,4 @@
-@extends('layouts.master')
+@extends('it_admin.layouts.master')
 
 @section('title', 'User Activity Report')
 
@@ -126,12 +126,12 @@
                 <input type="text" name="search" value="{{ request('search') }}"
                     placeholder="Search email, IP, or browser..." class="filter-input">
             </div>
-            <div class="filter-date-wrapper" style="display: flex; gap: 0.5rem; align-items: center;">
-                <input type="date" name="date_from" value="{{ $dateFrom }}" class="filter-input" style="width: 140px;">
-                <span style="color: var(--text-muted, #9ca3af); font-size: 0.8rem;">to</span>
-                <input type="date" name="date_to" value="{{ $dateTo }}" class="filter-input" style="width: 140px;">
+            <div style="display: flex; gap: 0.5rem; align-items: center; flex-shrink: 0;">
+                <input type="date" name="date_from" value="{{ $dateFrom }}" class="filter-input" style="width: 150px; flex: none;">
+                <span style="color: #64748b; font-size: 0.8rem; white-space: nowrap;">to</span>
+                <input type="date" name="date_to" value="{{ $dateTo }}" class="filter-input" style="width: 150px; flex: none;">
             </div>
-            <div class="filter-btn-group">
+            <div class="filter-btn-group" style="flex-shrink: 0;">
                 <button type="submit" class="btn-filter-submit">Filter</button>
                 <a href="{{ route('it_admin.reports.user_activity') }}" class="btn-filter-refresh">Reset</a>
             </div>

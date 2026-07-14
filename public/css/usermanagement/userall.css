@@ -179,18 +179,22 @@
     gap: 0.5rem;
 }
 
+.actions-group .btn-action,
 .btn-action {
-    padding: 0.3rem 0.7rem;
-    border-radius: 6px;
-    font-size: 0.75rem;
+    padding: 0.3rem 0.65rem !important;
+    border-radius: 6px !important;
+    font-size: 0.72rem !important;
     font-weight: 600;
     cursor: pointer;
-    border: none;
+    border: none !important;
     transition: background 0.15s;
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
     text-decoration: none;
+    line-height: 1.4;
+    min-height: unset !important;
+    height: auto !important;
 }
 
 .btn-action-edit {
