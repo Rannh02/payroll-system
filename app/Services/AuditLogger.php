@@ -20,8 +20,13 @@ class AuditLogger
         $userName = 'System / Guest';
         $role = 'unknown';
 
+        // Check if action is performed in superadmin routes
+        if (Request::is('superadmin*') && session()->has('superadmin_id')) {
+            $userName = session('superadmin_username') ?? 'Superadmin';
+            $role = 'Superadmin';
+        }
         // Check Admin guard
-        if (Auth::guard('admin')->check()) {
+        elseif (Auth::guard('admin')->check()) {
             $user = Auth::guard('admin')->user();
             $userName = $user->name ?? $user->email;
             $role = $user->role ?? 'admin';
@@ -32,7 +37,7 @@ class AuditLogger
             $userName = $user->name ?? $user->email;
             $role = 'Employee';
         }
-        // Check Superadmin via session (middleware logic)
+        // Check Superadmin via session (fallback)
         elseif (session()->has('superadmin_id')) {
             $userName = session('superadmin_username') ?? 'Superadmin';
             $role = 'Superadmin';
