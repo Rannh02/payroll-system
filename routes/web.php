@@ -110,6 +110,7 @@ Route::middleware(['auth:employee', 'employee'])->group(function () {
     Route::get('/my-attendance/report', [AttendanceController::class, 'report'])->name('user.attendance.report');
 
     Route::get('/payslip', [PayrollController::class, 'myPayslip'])->name('user.payslip');
+    Route::get('/payslip/{payroll}/download-pdf', [PayrollController::class, 'downloadPayslipPdf'])->name('user.payslip.download_pdf');
 
     Route::get('/leave_form', [LeaveController::class, 'showForm'])->name('user.leave_form');
     Route::post('/leave_form', [LeaveController::class, 'store'])->name('user.leave_form.store');
@@ -118,6 +119,7 @@ Route::middleware(['auth:employee', 'employee'])->group(function () {
     Route::post('/my-attendance/clock-in', [AttendanceController::class, 'userClockIn'])->name('user.clock_in');
     Route::post('/my-attendance/clock-out', [AttendanceController::class, 'userClockOut'])->name('user.clock_out');
     Route::get('/my-attendance/day-status', [AttendanceController::class, 'getDayStatus'])->name('user.day_status');
+    
 
 });
 
@@ -204,6 +206,8 @@ Route::middleware(['auth:admin', 'payroll_access'])->group(function () {
     Route::post('/payroll/run/{employee}/{from}/{to}', [PayrollController::class, 'runForEmployee'])->name('payroll.run');
     Route::get('/payroll/payslip-preview', [PayrollController::class, 'payslipPreview'])->name('payroll.payslip.preview');
     Route::get('/payroll', [PayrollController::class, 'index'])->name('payroll.index');
+    // PDF download accessible by admin via payroll_access middleware
+    Route::get('/payroll/{payroll}/download-pdf', [PayrollController::class, 'downloadPayslipPdf'])->name('payroll.download_pdf');
 });
 
 Route::middleware(['auth:admin', 'it_admin'])->prefix('it_admin')->name('it_admin.')->group(function () {
